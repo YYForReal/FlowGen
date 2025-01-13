@@ -1,0 +1,15 @@
+# python项目
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pyd
+*.pyo
+*.pyc
+*.pyw
+*.pyz
+
+# 环境
+.env
