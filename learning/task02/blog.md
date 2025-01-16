@@ -224,14 +224,61 @@ storage_context = StorageContext.from_defaults(persist_dir="storage")
 index = load_index_from_storage(storage_context)
 ```
 
-## 5. 实践中的关键点
+### 4.3 构建 RAG Agent
 
-在实现过程中，有几个关键点需要特别注意：
+除了直接使用 RAG 系统，我们还可以将其封装为 Agent 的工具。这样做的好处是可以让模型主动决定何时使用检索能力：
 
-1. **错误处理**：工具调用可能失败，需要有完善的错误处理机制
-2. **上下文管理**：在多轮对话中需要维护对话历史
-3. **性能优化**：大量文档检索时需要考虑性能问题
-4. **结果评估**：需要评估检索结果的相关性
+```python
+from llama_index.core.agent import ReActAgent
+from llama_index.core.tools import QueryEngineTool
+
+# 将查询引擎封装为工具
+retriever_tool = QueryEngineTool.from_defaults(
+    query_engine,
+    name="retriever_tool",
+    description="查询plantuml相关信息"
+)
+
+# 构建 RAG Agent
+rag_agent = ReActAgent.from_tools(
+    [retriever_tool], 
+    llm=Settings.llm, 
+    verbose=Settings.verbose,
+    max_iterations=Settings.max_iterations,
+    max_execution_time=Settings.max_execution_time
+)
+
+# 使用 RAG Agent 回答问题
+response = rag_agent.query("什么是用例图？")
+```
+
+这里需要特别注意 RAG 系统和 RAG Agent 的区别：
+
+1. **直接使用 RAG 系统**：
+   - 用户输入直接作为查询条件
+   - 只进行一次检索和回答生成
+   - 适合直接的知识查询场景
+
+2. **使用 RAG Agent**：
+   - Agent 会根据任务需要主动调用检索工具
+   - 可能对用户输入进行重构或拆分
+   - 支持多轮检索和推理
+   - 适合需要推理和多步骤的复杂问题
+
+让我们看看效果对比：
+
+![rag-agent-effect](./images/rag-agent-effect.png)
+
+可以看到，RAG Agent 能够：
+1. 主动分解复杂问题
+2. 根据需要多次检索相关信息
+3. 整合多个检索结果生成更完整的回答
+
+这种方式特别适合处理以下场景：
+- 需要综合多个知识点的问题
+- 需要推理和判断的复杂查询
+- 需要多轮交互的对话场景
+
 
 ## 总结
 
@@ -241,10 +288,12 @@ index = load_index_from_storage(storage_context)
 - 解析和检索 Markdown 文档
 - 回答基于知识库的问题
 
-你也可以基于这个框架，根据自己的需求扩展更多功能。欢迎在评论区分享你的想法和实践经验！
+你也可以基于这个框架，根据自己的需求扩展更多功能。
 
 ## 参考资料
 
 1. [LlamaIndex 官方文档](https://docs.llamaindex.ai/en/stable/)
 2. [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629)
 3. [智谱 AI 开发文档](https://open.bigmodel.cn/dev/welcome)
+
+本仓库笔记位于github仓库：[FlowGen/learning/task02](https://github.com/YYForReal/FlowGen/tree/main/learning/task02)
