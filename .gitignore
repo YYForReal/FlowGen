@@ -16,9 +16,7 @@ __pycache__/
 
 
 TD-AI-Chat-demo
-# 任意 目录的DW blog.md
-**/DW blog.md
-
-
 # 忽略所有目录下的DW blog.md
 **/DW blog.md
+
+drawio

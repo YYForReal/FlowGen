@@ -1,0 +1,39 @@
+@startuml
+package "Library Management System" {
+
+  [User Interface] as UI
+  UI --> [Catalog Search Component] : searches catalog
+  UI --> [Checkout Component] : handles checkouts
+  UI --> [Account Management Component] : manages user accounts
+
+  [Catalog Search Component] --> [Catalog Database] : accesses
+  [Checkout Component] --> [Transaction Database] : logs transactions
+  [Account Management Component] --> [User Database] : manages user data
+
+}
+
+database "Catalog Database" {
+  [Books]
+  [Authors]
+}
+
+database "Transaction Database" {
+  [Checkouts]
+  [Returns]
+}
+
+database "User Database" {
+  [Users]
+  [Fines]
+}
+
+[Catalog Search Component] --> [Books] : queries
+[Catalog Search Component] --> [Authors] : queries
+
+[Checkout Component] --> [Checkouts] : updates
+[Checkout Component] --> [Returns] : updates
+
+[Account Management Component] --> [Users] : updates
+[Account Management Component] --> [Fines] : updates
+
+@enduml

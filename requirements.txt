@@ -8,4 +8,4 @@ llama-index-vector-stores-qdrant
 llamaindex-py-client
 qdrant-client
 requests
-
+faiss-cpu
