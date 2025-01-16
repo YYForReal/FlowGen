@@ -13,3 +13,10 @@ __pycache__/
 
 # 环境
 .env
+
+
+TD-AI-Chat-demo
+# 任意 目录的DW blog.md
+**/DW blog.md
+
+

@@ -105,7 +105,7 @@ def do_search_agent():
     search_agent = ZhipuSearchAgent(llm=llm)
 
     # 创建任务
-    task = "2025年洛杉矶大火"
+    task = "2025年支付宝P0事故"
     task_pack = TaskPackage(instruction=task)
 
     # 执行任务并获取响应
