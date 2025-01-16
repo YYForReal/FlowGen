@@ -13,3 +13,7 @@ __pycache__/
 
 # 环境
 .env
+
+
+# 忽略所有目录下的DW blog.md
+**/DW blog.md
