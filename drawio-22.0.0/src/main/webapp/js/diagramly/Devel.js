@@ -257,6 +257,9 @@ mxscript(drawDevUrl + 'js/diagramly/GitLabFile.js');
 mxscript(drawDevUrl + 'js/diagramly/GitLabLibrary.js');
 mxscript(drawDevUrl + 'js/diagramly/GitLabClient.js');
 
+// 新增一个AI助手
+mxscript(drawDevUrl + 'js/diagramly/AIAssistant.js');
+
 mxscript(drawDevUrl + 'js/diagramly/App.js');
 mxscript(drawDevUrl + 'js/diagramly/Menus.js');
 mxscript(drawDevUrl + 'js/diagramly/Pages.js');

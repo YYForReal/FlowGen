@@ -16,6 +16,31 @@
 - [绘图助手](./drawing_assistant)
 
 
+
+### 通信协议规范：
+
+```
+// 请求格式
+{
+    message: "用户输入内容",
+    fileContent: "<mxfile>...</mxfile>" // 当前文件XML内容
+}
+
+// 响应格式
+{
+    analysis: "文本分析结果", 
+    fileContent: "<mxfile>...</mxfile>" // 修改后的文件内容
+}
+```
+
+
+### 核心交互流程：
+
+用户输入消息 → 获取当前文件内容 → 发送模拟请求
+接收响应 → 更新聊天记录 → 应用文件修改
+
+
+
 背景资料参考：
 1. plantUML入门：
 https://zhuanlan.zhihu.com/p/1158714578

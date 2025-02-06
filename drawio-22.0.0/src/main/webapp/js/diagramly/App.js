@@ -13,6 +13,7 @@
  */
 App = function(editor, container, lightbox)
 {
+	console.log("欢迎进入！！！")
 	EditorUi.call(this, editor, container, (lightbox != null) ? lightbox :
 		(urlParams['lightbox'] == '1' || (uiTheme == 'min' &&
 		urlParams['chrome'] != '0')));
@@ -1251,7 +1252,7 @@ App.main = function(callback, createUi)
 						}
 					}
 				}
-		
+	
 				// Loads configuration from local storage
 				if (isLocalStorage && localStorage != null && urlParams['embed'] != '1')
 				{
@@ -1827,6 +1828,24 @@ App.prototype.init = function()
 
 	// Log the ansestor frames
 	App.logAncestorFrames();
+
+	this.aiAssistant = new AIAssistant(this);
+
+
+	// 新增：检查URL中的id参数
+	let urlParams_id = new URLSearchParams(window.location.search);
+	var fileId = urlParams_id.get('id');
+	console.log("获取到fileId",fileId);
+	if (fileId) {
+		// 从localStorage加载文件
+		var fileData = localStorage.getItem('drawio-file-' + fileId);
+		if (fileData) {
+			var tempFile = new LocalFile(this, fileData, 'local-file.drawio', true);
+			this.loadFile("-1",null, tempFile);
+		} else {
+			console.warn('No local file found with id:', fileId);
+		}
+	}
 };
 
 App.logAncestorFrames = function()
@@ -5099,12 +5118,6 @@ App.prototype.fileCreated = function(file, libs, replace, done, clibs, success)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
 App.prototype.loadFile = function(id, sameWindow, file, success, force)
 {
 	if (urlParams['openInSameWin'] == '1' || navigator.standalone)
@@ -5123,6 +5136,28 @@ App.prototype.loadFile = function(id, sameWindow, file, success, force)
 		}
 		else if (this.spinner.spin(document.body, mxResources.get('loading')))
 		{
+			let urlParams_id = new URLSearchParams(window.location.search);
+			var fileId = urlParams_id.get('id');
+		
+			// My: 在loadFile方法顶部添加自定义ID处理
+			if (id === '-1' && fileId) 
+				{
+						console.log("loadFile",fileId);
+						var storageId = 'drawio-file-' + fileId;
+						var localData = localStorage.getItem(storageId);
+						
+						if (localData) 
+						{
+								var tempFile = new LocalFile(this, localData, 'local-file.drawio', true);
+								this.fileLoaded(tempFile);
+								// return; // 提前返回
+						}
+						else
+						{
+								console.warn('Local file not found:', storageId);
+						}
+				}
+
 			// Handles files from localStorage
 			if (id.charAt(0) == 'L')
 			{
@@ -6319,6 +6354,21 @@ App.prototype.showNotification = function(notifs, lsReadFlag)
 App.prototype.save = function(name, done)
 {
 	var file = this.getCurrentFile();
+
+	// 新增：从URL参数获取文件ID
+	let urlParams_id = new URLSearchParams(window.location.search);
+	var fileId = urlParams_id.get('id');
+	console.log("SAVE: 获取到fileId",fileId);
+	
+	if (fileId) {
+		// 将当前文件数据存入localStorage
+		try {
+			localStorage.setItem('drawio-file-' + fileId, file.data);
+			console.log('File saved to localStorage with id:', fileId);
+		} catch (e) {
+			console.error('LocalStorage save failed:', e);
+		}
+	}
 	
 	if (file != null && this.spinner.spin(document.body, mxResources.get('saving')))
 	{
