@@ -1,0 +1,13 @@
+java
+mxgraph
+webapp/img
+webapp/images
+webapp/templates
+webapp/resources
+webapp/stencils
+webapp/WEB-INF
+webapp/math
+webapp/shapes
+webapp/styles
+webapp/newDiagramCats
+webapp/plugins
