@@ -3827,9 +3827,7 @@ App.prototype.addLanguageMenu = function(elt, addLabel, right)
 	return img;
 };
 
-/**
- * Loads the given file handle as a local file.
- */
+
 App.prototype.loadFileSystemEntry = function(fileHandle, success, error)
 {
 	error = (error != null) ? error : mxUtils.bind(this, function(e)
@@ -3889,9 +3887,7 @@ App.prototype.loadFileSystemEntry = function(fileHandle, success, error)
 	}
 };
 
-/**
- * Loads the given file handle as a local file.
- */
+
 App.prototype.createFileSystemOptions = function(name)
 {
 	var ext = [];
@@ -3935,9 +3931,7 @@ App.prototype.createFileSystemOptions = function(name)
 	return {types: ext, fileName: name};
 };
 
-/**
- * Loads the given file handle as a local file.
- */
+
 App.prototype.showSaveFilePicker = function(success, error, opts)
 {
 	error = (error != null) ? error : mxUtils.bind(this, function(e)

@@ -119,12 +119,20 @@ AIAssistant.prototype = {
   handleAIResponse: function(response) {
       this.addMessage('assistant', response.analysis);
       
-      // 更新文件内容
       if (response.fileContent) {
           var currentFile = this.editorUi.getCurrentFile();
+          console.log("handleAI",currentFile)
+          console.log("this",this)
+          console.log("this.editorUi",this.editorUi)
+
           if (currentFile) {
-              currentFile.setData(response.fileContent);
-              this.editorUi.editor.graph.refresh();
+              // 直接调用保存方法
+              currentFile.directSave(response.fileContent);
+              if (this.sync != null)
+                {
+                  console.log("this.sync sendLocalChanges")
+                  this.sync.sendLocalChanges();
+                }
           }
       }
   },

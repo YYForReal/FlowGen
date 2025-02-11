@@ -21,12 +21,7 @@ LocalFile = function(ui, data, title, temp, fileHandle, desc)
 //Extends mxEventSource
 mxUtils.extend(LocalFile, DrawioFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.isAutosave = function()
 {
 	return this.fileHandle != null && !this.invalidFileHandle && DrawioFile.prototype.isAutosave.apply(this, arguments);
@@ -41,67 +36,37 @@ LocalFile.prototype.isAutosaveOptional = function()
 	return this.fileHandle != null;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.getMode = function()
 {
 	return this.mode;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.getTitle = function()
 {
 	return this.title;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.isRenamable = function()
 {
 	return true;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.save = function(revision, success, error)
 {
 	this.saveAs(this.title, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.saveAs = function(title, success, error)
 {
 	this.saveFile(title, false, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.saveAs = function(title, success, error)
 {
 	this.saveFile(title, false, success, error);
@@ -123,12 +88,7 @@ LocalFile.prototype.setDescriptor = function(desc)
 	this.desc = desc;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.getLatestVersion = function(success, error)
 {
 	if (this.fileHandle == null)
@@ -144,12 +104,7 @@ LocalFile.prototype.getLatestVersion = function(success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.saveFile = function(title, revision, success, error, useCurrentData)
 {
 	if (title != this.title)
@@ -305,12 +260,7 @@ LocalFile.prototype.saveFile = function(title, revision, success, error, useCurr
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalFile.prototype.rename = function(title, success, error)
 {
 	this.title = title;
