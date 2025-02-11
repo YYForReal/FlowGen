@@ -1,38 +1,25 @@
-# # Web框架
-# fastapi>=0.109.0
-# uvicorn>=0.27.0
-# websockets>=12.0
-# python-dotenv>=1.0.0
-# pydantic>=2.6.0
+fastapi
+uvicorn>=0.27.0
+websockets>=12.0
+python-dotenv>=1.0.0
 
-# # LLM相关
-# llama-index-core>=0.10.0
-# llama-index-llms-openai>=0.10.0
-# # llama-index-embeddings-huggingface>=0.10.0
-# openai>=1.12.0
+llama-index
+llama-index-vector-stores-faiss
 
-# # 向量存储
-# faiss-cpu>=1.7.4  # 如需GPU版本，替换为faiss-gpu
+openai>=1.12.0
 
-# # 绘图相关
-# # plantuml-markdown>=3.9.2
-# # drawio.py>=0.0.3
+faiss-cpu>=1.7.4
 
-# # 数据库
-# # sqlalchemy>=2.0.0
-# # sqlite3>=3.35.0
+# plantuml-markdown>=3.9.2
+# drawio.py>=0.0.3
 
-# # 工具库
-# numpy>=1.24.0
-# pandas>=2.0.0
+# sqlalchemy>=2.0.0
+# sqlite3>=3.35.0
+# mypy>=1.8.0
+# ruff>=0.2.0
+# pytest>=8.0.0
+# pytest-cov>=4.1.0
+# black>=24.1.0
+# isort>=5.13.0
 
-# # 开发工具
-# # mypy>=1.8.0
-# # ruff>=0.2.0
-# # pytest>=8.0.0
-# # pytest-cov>=4.1.0
-# # black>=24.1.0
-# # isort>=5.13.0
-
-# # # 类型提示
-# # types-all>=1.0.0 
+# types-all>=1.0.0 

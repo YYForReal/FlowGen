@@ -23,12 +23,7 @@ mxUtils.extend(StorageLibrary, StorageFile);
  */
 StorageLibrary.prototype.type = 'L';
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 StorageLibrary.prototype.isAutosave = function()
 {
 	return true;
@@ -42,23 +37,13 @@ StorageLibrary.prototype.saveAs = function(title, success, error)
 	this.saveFile(title, false, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 StorageLibrary.prototype.getHash = function()
 {
 	return 'L' + encodeURIComponent(this.title);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 StorageLibrary.prototype.getTitle = function()
 {
 	return (this.title == '.scratchpad') ? mxResources.get('scratchpad') : this.title;

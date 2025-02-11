@@ -425,12 +425,7 @@ DropboxClient.prototype.getFile = function(path, success, error, asLibrary)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.readFile = function(arg, success, error, binary)
 {
 	var doExecute = mxUtils.bind(this, function(failOnAuth)
@@ -570,12 +565,7 @@ DropboxClient.prototype.readFile = function(arg, success, error, binary)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.checkExists = function(filename, fn, noConfirm)
 {
 	var promiseFn = mxUtils.bind(this, function()
@@ -605,12 +595,7 @@ DropboxClient.prototype.checkExists = function(filename, fn, noConfirm)
 	});
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.renameFile = function(file, filename, success, error)
 {
 	if (/[\\\/:\?\*"\|]/.test(filename))
@@ -679,23 +664,13 @@ DropboxClient.prototype.renameFile = function(file, filename, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.insertLibrary = function(filename, data, success, error)
 {
 	this.insertFile(filename, data, success, error, true);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.insertFile = function(filename, data, success, error, asLibrary)
 {
 	asLibrary = (asLibrary != null) ? asLibrary : false;
@@ -723,12 +698,7 @@ DropboxClient.prototype.insertFile = function(filename, data, success, error, as
 	}));
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.saveFile = function(filename, data, success, error, folder)
 {
 	if (/[\\\/:\?\*"\|]/.test(filename))
@@ -756,12 +726,7 @@ DropboxClient.prototype.saveFile = function(filename, data, success, error, fold
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.pickLibrary = function(fn)
 {
 	// Authentication will be carried out on open to make sure the
@@ -821,12 +786,7 @@ DropboxClient.prototype.pickLibrary = function(fn)
 	});
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.createLibrary = function(file, success, error)
 {
 	this.ui.confirm(mxResources.get('note') + ': ' + mxResources.get('fileWillBeSavedInAppFolder',
@@ -853,12 +813,7 @@ DropboxClient.prototype.createLibrary = function(file, success, error)
 	}));
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.pickFile = function(fn, readOnly)
 {
 	if (Dropbox.choose != null)
@@ -966,12 +921,7 @@ DropboxClient.prototype.pickFile = function(fn, readOnly)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DropboxClient.prototype.createFile = function(file, success, error)
 {
 	var binary = /(\.png)$/i.test(file.name);

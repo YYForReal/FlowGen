@@ -30,12 +30,7 @@ GitLabFile.prototype.getFolderUrl = function()
 	return url.substring(0, url.lastIndexOf('/'));
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabFile.prototype.share = function()
 {
 	this.ui.editor.graph.openLink(DRAWIO_GITLAB_URL + '/' +
@@ -43,12 +38,7 @@ GitLabFile.prototype.share = function()
 		encodeURIComponent(this.meta.repo) +'/-/project_members');
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabFile.prototype.getId = function()
 {
 	return this.meta.org + '/' +
@@ -57,12 +47,7 @@ GitLabFile.prototype.getId = function()
 		((this.meta.path != null) ? '/' + this.meta.path : '') : '') : '');
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabFile.prototype.getHash = function()
 {
 	return encodeURIComponent('A' + this.getId());
@@ -76,12 +61,7 @@ GitLabFile.prototype.isConflict = function(err)
 	return err != null && err.status == 400;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabFile.prototype.getMode = function()
 {
 	return App.MODE_GITLAB;

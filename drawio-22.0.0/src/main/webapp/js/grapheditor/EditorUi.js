@@ -4006,12 +4006,7 @@ EditorUi.prototype.lightboxFit = function(maxHeight)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 EditorUi.prototype.isDiagramEmpty = function()
 {
 	var model = this.editor.graph.getModel();
@@ -5428,12 +5423,7 @@ EditorUi.prototype.addSplitHandler = function(elt, horizontal, dx, onChange)
 	});	
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 EditorUi.prototype.prompt = function(title, defaultValue, fn)
 {
 	var dlg = new FilenameDialog(this, defaultValue, mxResources.get('apply'), function(newValue)
@@ -5445,12 +5435,7 @@ EditorUi.prototype.prompt = function(title, defaultValue, fn)
 	dlg.init();
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 EditorUi.prototype.handleError = function(resp, title, fn, invokeFnOnClose, notFoundMessage)
 {
 	var e = (resp != null && resp.error != null) ? resp.error : resp;
@@ -5475,12 +5460,7 @@ EditorUi.prototype.handleError = function(resp, title, fn, invokeFnOnClose, notF
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 EditorUi.prototype.showError = function(title, msg, btn, fn, retry, btn2, fn2, btn3, fn3, w, h, hide, onClose)
 {
 	var dlg = new ErrorDialog(this, title, msg, btn || mxResources.get('ok'),

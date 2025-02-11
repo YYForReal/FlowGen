@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import pako from 'pako';
 
 interface PlantUMLRendererProps {
   code: string;
@@ -14,7 +15,7 @@ export function PlantUMLRenderer({ code, className }: PlantUMLRendererProps) {
     // 这里使用 PlantUML 在线服务器进行渲染
     // 实际项目中建议使用自己的服务器
     const encodedCode = encode64(deflate(code));
-    setImageUrl(`http://www.plantuml.com/plantuml/img/${encodedCode}`);
+    setImageUrl(`https://www.plantuml.com/plantuml/img/${encodedCode}`);
   }, [code]);
 
   if (!imageUrl) {
@@ -73,8 +74,14 @@ function encode6bit(b: number) {
 }
 
 // PlantUML 压缩函数
-function deflate(str: string) {
-  // 这里需要添加 pako 或其他 deflate 库
-  // 暂时返回原字符串，实际使用时需要实现压缩
-  return str;
+function deflate(str: string): string {
+  // 将字符串转换为 UTF-8 编码的 Uint8Array
+  const utf8Encoder = new TextEncoder();
+  const data = utf8Encoder.encode(str);
+  
+  // 使用 pako 进行压缩
+  const compressed = pako.deflate(data, { level: 9 });
+  
+  // 将压缩后的数据转换为字符串
+  return String.fromCharCode.apply(null, compressed);
 } 

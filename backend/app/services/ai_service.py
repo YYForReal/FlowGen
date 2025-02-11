@@ -166,7 +166,7 @@ class RAGService:
         nodes = parser.get_nodes_from_documents(all_docs)
         
         # 初始化嵌入模型
-        embedding = JinaEmbedding(api_key=os.getenv('JINAAI_API_KEY'))
+        embedding = JinaEmbedding(api_key=os.getenv('JINAAI_API_KEY'),dimensions=1024)
         emb_dimension = len(embedding.get_text_embedding("test"))
         
         # 创建向量存储和索引

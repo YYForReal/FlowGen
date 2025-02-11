@@ -55,12 +55,7 @@ DriveFile.prototype.getCurrentUser = function()
 	return (this.ui.drive != null) ? this.ui.drive.user : null;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.getMode = function()
 {
 	return App.MODE_GOOGLE;
@@ -131,45 +126,25 @@ DriveFile.prototype.isAutosaveOptional = function()
 	return true;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.isRenamable = function()
 {
 	return this.isEditable() && DrawioFile.prototype.isEditable.apply(this, arguments);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.isMovable = function()
 {
 	return this.isEditable();
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.isTrashed = function()
 {
 	return this.desc.labels.trashed;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.save = function(revision, success, error, unloading, overwrite)
 {
 	DrawioFile.prototype.save.apply(this, [revision, mxUtils.bind(this, function()
@@ -178,12 +153,7 @@ DriveFile.prototype.save = function(revision, success, error, unloading, overwri
 	}), error, unloading, overwrite]);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.saveFile = function(title, revision, success, error, unloading, overwrite)
 {
 	try
@@ -429,23 +399,13 @@ DriveFile.prototype.makeCopy = function(success, error, timestamp)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.saveAs = function(filename, success, error)
 {
 	this.ui.drive.copyFile(this.getId(), filename, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.rename = function(title, success, error)
 {
 	var rev = this.getCurrentRevisionId();
@@ -481,12 +441,7 @@ DriveFile.prototype.rename = function(title, success, error)
 	}), error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.move = function(folderId, success, error)
 {
 	this.ui.drive.moveFile(this.getId(), folderId, mxUtils.bind(this, function(resp)
@@ -501,56 +456,31 @@ DriveFile.prototype.move = function(folderId, success, error)
 	}), error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.share = function()
 {
 	this.ui.drive.showPermissions(this.getId());
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.getTitle = function()
 {
 	return this.desc.title;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.getHash = function()
 {
 	return 'G' + this.getId();
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.getId = function()
 {
 	return this.desc.id;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveFile.prototype.isEditable = function()
 {
 	return DrawioFile.prototype.isEditable.apply(this, arguments) &&

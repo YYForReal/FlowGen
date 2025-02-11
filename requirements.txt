@@ -9,3 +9,6 @@ llamaindex-py-client
 qdrant-client
 requests
 faiss-cpu
+
+chromadb
+llama_index

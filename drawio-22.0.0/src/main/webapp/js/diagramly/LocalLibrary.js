@@ -16,45 +16,25 @@ LocalLibrary = function(ui, data, title)
 //Extends mxEventSource
 mxUtils.extend(LocalLibrary, LocalFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalLibrary.prototype.getHash = function()
 {
 	return 'F' + this.getTitle();
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalLibrary.prototype.isAutosave = function()
 {
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalLibrary.prototype.saveAs = function(title, success, error)
 {
 	this.saveFile(title, false, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 LocalLibrary.prototype.updateFileData = function()
 {
 	// Do nothing

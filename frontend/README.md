@@ -1,6 +1,6 @@
 # FlowGen Frontend
 
-基于Next.js 14的科研绘图助手前端项目。
+基于Next.js 14的科研绘图助手前端项目。（TODO）
 
 ## 技术栈
 

@@ -11,8 +11,8 @@ export default function Home() {
   } | null>(null);
 
   return (
-    <main className="flex h-screen">
-      <div className="w-1/2 border-r">
+    <main className="flex min-h-screen bg-white">
+      <div className="w-1/2 border-r border-gray-200">
         <ChatPanel 
           className="h-full" 
           onDiagramChange={setCurrentDiagram}

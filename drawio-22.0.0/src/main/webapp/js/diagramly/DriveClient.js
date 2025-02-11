@@ -897,12 +897,7 @@ DriveClient.prototype.updateUser = function(success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.copyFile = function(id, title, success, error)
 {
 	if (id != null && title != null)
@@ -916,12 +911,7 @@ DriveClient.prototype.copyFile = function(id, title, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.renameFile = function(id, title, success, error)
 {
 	if (id != null && title != null)
@@ -931,12 +921,7 @@ DriveClient.prototype.renameFile = function(id, title, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.moveFile = function(id, folderId, success, error)
 {
 	if (id != null && folderId != null)
@@ -946,12 +931,7 @@ DriveClient.prototype.moveFile = function(id, folderId, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.createDriveRequest = function(id, body)
 {
 	return {
@@ -1305,12 +1285,7 @@ DriveClient.prototype.getXmlFile = function(resp, success, error, ignoreMime, re
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.saveFile = function(file, revision, success, errFn, noCheck, unloading, overwrite, properties, secret)
 {
 	try
@@ -2025,12 +2000,7 @@ DriveClient.prototype.saveFile = function(file, revision, success, errFn, noChec
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.insertFile = function(title, data, folderId, success, error, mimeType, binary)
 {
 	mimeType = (mimeType != null) ? mimeType : this.xmlMimeType;
@@ -2067,12 +2037,7 @@ DriveClient.prototype.insertFile = function(title, data, folderId, success, erro
 	}), error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.createUploadRequest = function(id, metadata, data, revision, binary, etag, pinned)
 {
 	binary = (binary != null) ? binary : false;
@@ -2113,12 +2078,7 @@ DriveClient.prototype.createUploadRequest = function(id, metadata, data, revisio
 	return reqObj;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.createLinkPicker = function()
 {
 	var name = 'linkPicker';
@@ -2153,12 +2113,7 @@ DriveClient.prototype.createLinkPicker = function()
 	return picker;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.pickFile = function(fn, acceptAllFiles, cancelFn)
 {
 	this.filePickerCallback = (fn != null) ? fn : mxUtils.bind(this, function(id)
@@ -2296,12 +2251,7 @@ DriveClient.prototype.pickFile = function(fn, acceptAllFiles, cancelFn)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.pickFolder = function(fn, force)
 {
 	this.folderPickerCallback = fn;
@@ -2446,12 +2396,7 @@ DriveClient.prototype.pickFolder = function(fn, force)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.pickLibrary = function(fn)
 {
 	this.filePickerCallback = fn;
@@ -2569,12 +2514,7 @@ DriveClient.prototype.pickLibrary = function(fn)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveClient.prototype.showPermissions = function(id)
 {
 	var fallback = mxUtils.bind(this, function()

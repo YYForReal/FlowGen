@@ -13,12 +13,7 @@ GitHubFile = function(ui, data, meta)
 //Extends mxEventSource
 mxUtils.extend(GitHubFile, DrawioFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.share = function()
 {
 	this.ui.editor.graph.openLink('https://github.com/' +
@@ -26,12 +21,7 @@ GitHubFile.prototype.share = function()
 		encodeURIComponent(this.meta.repo) +'/settings/access');
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.getId = function()
 {
 	return encodeURIComponent(this.meta.org) + '/' +
@@ -40,12 +30,7 @@ GitHubFile.prototype.getId = function()
 		((this.meta.path != null) ? '/' + this.meta.path : '') : '') : '');
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.getHash = function()
 {
 	return encodeURIComponent('H' + this.getId());
@@ -117,12 +102,7 @@ GitHubFile.prototype.isConflict = function(err)
 	return err != null && err.status == 409;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.getMode = function()
 {
 	return App.MODE_GITHUB;
@@ -136,23 +116,13 @@ GitHubFile.prototype.isAutosave = function()
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.getTitle = function()
 {
 	return this.meta.name;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.isRenamable = function()
 {
 	return false;
@@ -198,34 +168,19 @@ GitHubFile.prototype.setDescriptorEtag = function(desc, etag)
 	desc.sha = etag;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.save = function(revision, success, error, unloading, overwrite, message)
 {
 	this.doSave(this.getTitle(), success, error, unloading, overwrite, message);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.saveAs = function(title, success, error)
 {
 	this.doSave(title, success, error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.doSave = function(title, success, error, unloading, overwrite, message)
 {
 	// Forces update of data for new extensions
@@ -239,12 +194,7 @@ GitHubFile.prototype.doSave = function(title, success, error, unloading, overwri
 	}), error, unloading, overwrite]);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubFile.prototype.saveFile = function(title, revision, success, error, unloading, overwrite, message)
 {
 	if (!this.isEditable())

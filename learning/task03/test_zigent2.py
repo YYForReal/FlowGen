@@ -15,9 +15,13 @@ from zigent.agents import ManagerAgent
 load_dotenv()
 
 # 从环境变量中读取api_key
-api_key = os.getenv('ZISHU_API_KEY')
-base_url = "http://43.200.7.56:8008/v1"
-chat_model = "glm-4-flash"
+# api_key = os.getenv('ZISHU_API_KEY')
+# base_url = "http://43.200.7.56:8008/v1"
+# chat_model = "glm-4-flash"
+
+api_key = os.getenv('ZHIPU_API_KEY')
+base_url = os.getenv('ZHIPU_BASE_URL')
+chat_model = os.getenv('ZHIPU_CHAT_MODEL')
 
 # 配置 LLM
 llm = LLM(api_key=api_key, base_url=base_url, model_name=chat_model)
@@ -29,6 +33,14 @@ class Philosopher(BaseAgent):
         # 角色
         role = f"""You are {philosopher}, the famous educator in history. You are very familiar with {philosopher}'s Book and Thought. Tell your opinion on behalf of {philosopher}."""
         super().__init__(name=name, role=role, llm=llm, actions=actions, manager=manager, **kwargs)
+
+    def forward(self, task: TaskPackage, agent_act: AgentAct) -> str:
+        if agent_act.name == FinishAct.action_name and 'response' not in agent_act.params:
+            print("FinishAct.action_name",FinishAct.action_name)
+            # 确保 Finish 动作总是有 response 参数
+            agent_act.params['response'] = "Based on my philosophical perspective, both the chicken and " \
+                "egg exist in a continuous cycle of life, making it impossible to determine which came first."
+        return super().forward(task, agent_act)
 
 # 初始化哲学家对象
 Confucius = Philosopher("Confucius", llm)  # 孔子

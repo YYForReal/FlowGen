@@ -1099,12 +1099,7 @@ DrawioFile.prototype.save = function(revision, success, error, unloading, overwr
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.createData = function()
 {
 	var actualPages = this.ui.pages;
@@ -1136,12 +1131,7 @@ DrawioFile.prototype.createData = function()
 	return result;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.updateFileData = function()
 {
 	// Sends pending local changes and updates own pages
@@ -1158,23 +1148,13 @@ DrawioFile.prototype.updateFileData = function()
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isCompressedStorage = function()
 {
 	return Editor.defaultCompressed;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isCompressed = function()
 {
 	var compressed = (this.ui.fileNode != null) ? this.ui.fileNode.getAttribute('compressed') : null;
@@ -1189,20 +1169,10 @@ DrawioFile.prototype.isCompressed = function()
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.saveAs = function(filename, success, error) { };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.saveFile = function(title, revision, success, error) { };
 
 /**
@@ -1237,45 +1207,25 @@ DrawioFile.prototype.isRestricted = function()
 	return DrawioFile.RESTRICT_EXPORT;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isModified = function()
 {
 	return this.modified;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.getShadowModified = function()
 {
 	return this.shadowModified;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.setShadowModified = function(value)
 {
 	this.shadowModified = value;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.setModified = function(value)
 {
 	this.modified = value;
@@ -1291,72 +1241,37 @@ DrawioFile.prototype.isAutosaveOptional = function()
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isAutosave = function()
 {
 	return !this.inConflictState && this.ui.editor.autosave;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isRenamable = function()
 {
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.rename = function(title, success, error) { };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isMovable = function()
 {
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.isTrashed = function()
 {
 	return false;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.move = function(folderId, success, error) { };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.share = function()
 {
 	if (this.ui.drive != null)
@@ -2676,23 +2591,13 @@ DrawioFile.prototype.isAutosaveRevision = function()
 	return (this.lastAutosaveRevision == null) || (now - this.lastAutosaveRevision) > this.maxAutosaveRevisionDelay;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.descriptorChanged = function()
 {
 	this.fireEvent(new mxEventObject('descriptorChanged'));
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DrawioFile.prototype.contentChanged = function()
 {
 	this.fireEvent(new mxEventObject('contentChanged'));

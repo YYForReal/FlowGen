@@ -443,12 +443,7 @@ GitLabClient.prototype.getFile = function(path, success, error, asLibrary, check
 	}), error, knownRefPos);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabClient.prototype.getFileContent = function(data)
 {
 	var fileName = data.file_name;
@@ -493,12 +488,7 @@ GitLabClient.prototype.getFileContent = function(data)
 	return content;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabClient.prototype.createGitLabFile = function(org, repo, ref, data, asLibrary, refPos)
 {
 	var gitLabUrl = DRAWIO_GITLAB_URL + '/';
@@ -514,12 +504,7 @@ GitLabClient.prototype.createGitLabFile = function(org, repo, ref, data, asLibra
 	return (asLibrary) ? new GitLabLibrary(this.ui, content, meta) : new GitLabFile(this.ui, content, meta);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabClient.prototype.insertFile = function(filename, data, success, error, asLibrary, folderId, base64Encoded)
 {
 	asLibrary = (asLibrary != null) ? asLibrary : false;
@@ -591,12 +576,7 @@ GitLabClient.prototype.insertFile = function(filename, data, success, error, asL
 	}), error, null, tok.length <= 4);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabClient.prototype.checkExists = function(path, askReplace, fn)
 {
 	this.getFile(path, mxUtils.bind(this, function(file)
@@ -669,12 +649,7 @@ GitLabClient.prototype.writeFile = function(org, repo, ref, path, message, data,
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitLabClient.prototype.saveFile = function(file, success, error, overwrite, message)
 {
 	var org = file.meta.org;

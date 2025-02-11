@@ -12,12 +12,7 @@ RemoteFile = function(ui, data, title)
 //Extends mxEventSource
 mxUtils.extend(RemoteFile, DrawioFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 RemoteFile.prototype.isAutosave = function()
 {
 	return false;

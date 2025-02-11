@@ -1473,12 +1473,7 @@ App.prototype.initializeViewerMode = function()
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.init = function()
 {
 	EditorUi.prototype.init.apply(this, arguments);
@@ -1835,7 +1830,30 @@ App.prototype.init = function()
 	// 新增：检查URL中的id参数
 	let urlParams_id = new URLSearchParams(window.location.search);
 	var fileId = urlParams_id.get('id');
-	console.log("获取到fileId",fileId);
+
+	if (!fileId) {
+		// 生成8位随机ID（十六进制格式）
+		fileId = Math.random().toString(16).substr(2, 8);
+		console.log("urlParams",urlParams)
+		// 更新浏览器URL而不刷新页面
+		urlParams.id =  fileId;
+		// window.history.replaceState({}, '', '?' + urlParams.toString());
+		// TODO 使用window.history.replaceState方法更新浏览器URL
+		// 但是不要直接toString,因为 urlParams =  {dev: '1', sync: 'manual' , id: "d0188248"} Object
+
+		// 替换原来的注释代码
+		var searchParams = new URLSearchParams();
+		for (var key in urlParams) {
+			if (urlParams.hasOwnProperty(key)) {
+				searchParams.append(key, urlParams[key]);
+			}
+		}
+		window.history.replaceState({}, '', '?' + searchParams.toString());
+
+		console.log("生成新fileId:", fileId);
+	}
+
+	console.log("当前fileId", fileId);
 	if (fileId) {
 		// 从localStorage加载文件
 		var fileData = localStorage.getItem('drawio-file-' + fileId);
@@ -1846,6 +1864,8 @@ App.prototype.init = function()
 			console.warn('No local file found with id:', fileId);
 		}
 	}
+
+
 };
 
 App.logAncestorFrames = function()
@@ -2378,12 +2398,7 @@ App.prototype.onBeforeUnload = function()
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.updateDocumentTitle = function()
 {
 	var title = this.editor.appName;
@@ -2647,12 +2662,7 @@ App.prototype.getThumbnail = function(width, fn)
 	return result;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.createBackground = function()
 {
 	var bg = this.createDiv('background');
@@ -2668,12 +2678,7 @@ App.prototype.createBackground = function()
 	return bg;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 (function()
 {
 	var editorUiSetMode = EditorUi.prototype.setMode;
@@ -3081,12 +3086,7 @@ App.prototype.showAlert = function(message)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.start = function()
 {
 	try
@@ -3366,7 +3366,7 @@ App.prototype.start = function()
 						window.location.search = this.getSearch(['create', 'title']);
 					};
 				});
-	
+
 				var showCreateDialog = mxUtils.bind(this, function(xml)
 				{
 					this.spinner.stop();
@@ -3688,12 +3688,7 @@ App.prototype.checkDrafts = function()
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.showSplash = function(force)
 {
 	//Splash dialog shouldn't be shownn when running without a file menu
@@ -3750,12 +3745,7 @@ App.prototype.showSplash = function(force)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.addLanguageMenu = function(elt, addLabel, right)
 {
 	var img = null;
@@ -3962,12 +3952,7 @@ App.prototype.showSaveFilePicker = function(success, error, opts)
 	}), error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.pickFile = function(mode)
 {
 	try
@@ -4118,12 +4103,7 @@ App.prototype.pickFile = function(mode)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.pickLibrary = function(mode)
 {
 	mode = (mode != null) ? mode : this.mode;
@@ -4283,12 +4263,7 @@ App.prototype.pickLibrary = function(mode)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.saveLibrary = function(name, images, file, mode, noSpin, noReload, fn)
 {
 	try
@@ -4664,12 +4639,7 @@ App.prototype.saveFile = function(forceDialog, success)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.loadTemplate = function(url, onload, onerror, templateFilename, asLibrary)
 {
 	var base64 = false;
@@ -4761,12 +4731,7 @@ App.prototype.loadTemplate = function(url, onload, onerror, templateFilename, as
 		/(\.vs(x|sx?))($|\?)/i.test(filterFn), null, null, base64);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.getPeerForMode = function(mode)
 {
 	if (mode == App.MODE_GOOGLE)
@@ -4799,12 +4764,7 @@ App.prototype.getPeerForMode = function(mode)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.uncompressPages = function(data)
 {
 	if (data != null)
@@ -4841,12 +4801,7 @@ App.prototype.uncompressPages = function(data)
 	return data;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.createFile = function(title, data, libs, mode, done, replace, folderId, tempFile, clibs, success)
 {
 	mode = (tempFile) ? null : ((mode != null) ? mode : this.mode);
@@ -4956,12 +4911,7 @@ App.prototype.createFile = function(title, data, libs, mode, done, replace, fold
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.fileCreated = function(file, libs, replace, done, clibs, success)
 {
 	var url = window.location.pathname;
@@ -5556,12 +5506,7 @@ App.prototype.loadFile = function(id, sameWindow, file, success, force)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.getLibraryStorageHint = function(file)
 {
 	var tip = file.getTitle();
@@ -5888,12 +5833,7 @@ App.prototype.loadLibraries = function(libs, done)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.updateButtonContainer = function()
 {
 	if (this.buttonContainer != null)
@@ -6345,12 +6285,7 @@ App.prototype.showNotification = function(notifs, lsReadFlag)
 	shouldAnimate(newNotif);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.save = function(name, done)
 {
 	var file = this.getCurrentFile();
@@ -6708,12 +6643,7 @@ App.prototype.exportFile = function(data, filename, mimeType, base64Encoded, mod
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 App.prototype.descriptorChanged = function()
 {
 	var file = this.getCurrentFile();

@@ -10,23 +10,13 @@ DriveLibrary = function(ui, data, desc)
 //Extends mxEventSource
 mxUtils.extend(DriveLibrary, DriveFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveLibrary.prototype.isAutosave = function()
 {
 	return true;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 DriveLibrary.prototype.save = function(revision, success, error)
 {
 	this.ui.drive.saveFile(this, revision, mxUtils.bind(this, function(resp)

@@ -1,0 +1,14 @@
+<script src="https://cdn.jsdelivr.net/npm/plantuml-uml/dist/plantuml-uml.min.js"></script>
+<div id="uml-output"></div>
+<script>
+  const plantuml = `@startuml
+    class A {
+      +void method()
+    }
+    class B {
+      +void method()
+    }
+    A --|> B
+  @enduml`;
+  plantumluml.render("uml-output", plantuml);
+</script>

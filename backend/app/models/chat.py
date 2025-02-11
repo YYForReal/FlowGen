@@ -26,4 +26,16 @@ class DiagramResponse(BaseModel):
     type: str = Field(..., description="图表类型")
     content: str = Field(..., description="图表内容")
     preview_url: Optional[str] = Field(default=None, description="预览图片URL")
-    metadata: Optional[Dict[str, Any]] = Field(default=None, description="额外的元数据") 
+    metadata: Optional[Dict[str, Any]] = Field(default=None, description="额外的元数据")
+
+class DiagramGenerationRequest(DiagramRequest):
+    """图表生成请求模型"""
+    user_prompt: str = Field(..., description="用户需求描述")
+    current_drawio: Optional[str] = Field(default=None, description="当前drawio文件内容")
+
+class DiagramGenerationResponse(BaseModel):
+    """图表生成响应模型"""
+    analysis: str = Field(..., description="生成过程分析说明")
+    content: str = Field(..., description="生成的drawio文件内容")
+    diagram_info: Optional[Dict[str, Any]] = Field(default=None, description="存储的图表元数据")
+    success: bool = Field(..., description="是否生成成功") 

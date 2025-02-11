@@ -10,23 +10,13 @@ OneDriveLibrary = function(ui, data, meta)
 //Extends mxEventSource
 mxUtils.extend(OneDriveLibrary, OneDriveFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveLibrary.prototype.isAutosave = function()
 {
 	return true;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveLibrary.prototype.save = function(revision, success, error)
 {
 	this.ui.oneDrive.saveFile(this, mxUtils.bind(this, function(resp)

@@ -532,12 +532,7 @@ GitHubClient.prototype.getFile = function(path, success, error, asLibrary, check
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubClient.prototype.createGitHubFile = function(org, repo, ref, data, asLibrary)
 {
 	var meta = {'org': org, 'repo': repo, 'ref': ref, 'name': data.name,
@@ -580,23 +575,13 @@ GitHubClient.prototype.createGitHubFile = function(org, repo, ref, data, asLibra
 	return (asLibrary) ? new GitHubLibrary(this.ui, content, meta) : new GitHubFile(this.ui, content, meta);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubClient.prototype.insertLibrary = function(filename, data, success, error, folderId)
 {
 	this.insertFile(filename, data, success, error, true, folderId, false);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubClient.prototype.insertFile = function(filename, data, success, error, asLibrary, folderId, base64Encoded)
 {
 	asLibrary = (asLibrary != null) ? asLibrary : false;
@@ -721,12 +706,7 @@ GitHubClient.prototype.writeFile = function(org, repo, ref, path, message, data,
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubClient.prototype.checkExists = function(path, askReplace, fn)
 {
 	var tokens = path.split('/');
@@ -766,12 +746,7 @@ GitHubClient.prototype.checkExists = function(path, askReplace, fn)
 	}), true);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 GitHubClient.prototype.saveFile = function(file, success, error, overwrite, message)
 {
 	var org = file.meta.org;

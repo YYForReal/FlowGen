@@ -133,21 +133,54 @@ class BaseAgent(ABCAgent):
         return self.llm.run(prompt)
 
     def execute(self, task: TaskPackage):
-        """multi-step execution of actions. Generate the actions for a task until reach the done
+        """多步骤执行动作的核心方法。
+        该方法会不断生成动作直到任务完成或达到最大执行步数。
 
-        :param task: the task which agent receives and solves
+        执行流程：
+        1. 初始化并记录任务开始
+        2. 循环执行动作直到任务完成：
+           - 获取历史动作链
+           - 生成下一个动作
+           - 执行动作并获取观察结果
+           - 记忆动作和结果
+           - 检查是否需要继续
+        3. 记录任务结束
+
+        :param task: 智能体接收并需要解决的任务包
         :type task: TaskPackage
         """
+        # 步数计数器
         step_size = 0
+        
+        # 记录任务开始执行
         self.logger.execute_task(task=task, agent_name=self.name)
+        
+        # 主执行循环：当任务处于活动状态且未超过最大步数时继续
         while task.completion == "active" and step_size < self.max_exec_steps:
+            # 从短期记忆中获取当前任务的历史动作链
             action_chain = self.short_term_memory.get_action_chain(task)
+            
+            # 根据任务和历史动作链生成下一个动作
+            # __next_act__ 会调用 LLM 来决定下一步该做什么
             action = self.__next_act__(task, action_chain)
+            
+            # 记录当前步骤要执行的动作
             self.logger.take_action(action, agent_name=self.name, step_idx=step_size)
+            
+            # 执行动作并获取观察结果
+            # forward 方法处理具体的动作执行逻辑
             observation = self.forward(task, action)
+            
+            # 记录执行结果
             self.logger.get_obs(obs=observation)
+            
+            # 将动作和观察结果存入短期记忆
             self.__st_memorize__(task, action, observation)
+            
+            # 步数加1
             step_size += 1
+        
+        # 记录任务执行结束
         self.logger.end_execute(task=task, agent_name=self.name)
 
     def respond(self, task: TaskPackage, **kwargs) -> str:
@@ -216,34 +249,57 @@ class BaseAgent(ABCAgent):
         return agent_act
 
     def forward(self, task: TaskPackage, agent_act: AgentAct) -> str:
-        """
-        using this function to forward the action to get the observation.
+        """执行动作并返回观察结果。
 
-        :param task: the task which agent receives and solves.
+        执行流程：
+        1. 验证动作是否存在
+        2. 检查必需参数
+        3. 执行动作
+        4. 返回观察结果
+
+        :param task: 智能体接收并需要解决的任务
         :type task: TaskPackage
-        :param agent_act: the action wrapper for execution.
+        :param agent_act: 待执行的动作包装器
         :type agent_act: AgentAct
-        :return: observation
+        :return: 观察结果
         :rtype: str
         """
         act_found_flag = False
-        # if action is Finish Action
+        
+        # 如果是 Finish 动作
         if agent_act.name == FinishAct.action_name:
             act_found_flag = True
-            observation = "Task Completed."
-            task.completion = "completed"
-            task.answer = FinishAct(**agent_act.params)
-        # if match one in self.actions
+            # 检查必需的 response 参数
+            if 'response' not in agent_act.params:
+                observation = "Error: FinishAct requires 'response' parameter."
+                return observation
+            
+            try:
+                # 先创建 FinishAct 实例进行参数验证
+                finish_act = FinishAct(**agent_act.params)
+                task.completion = "completed"
+                task.answer = finish_act
+                observation = "Task Completed."
+            except TypeError as e:
+                observation = f"Error executing FinishAct: {str(e)}"
+                return observation
+                
+        # 如果是其他动作
         else:
             for action in self.actions:
                 if act_match(agent_act.name, action):
                     act_found_flag = True
-                    observation = action(**agent_act.params)
-        # if not find this action
-        if act_found_flag:
-            return observation
-        else:
+                    try:
+                        observation = action(**agent_act.params)
+                    except TypeError as e:
+                        observation = f"Error executing {action.__name__}: {str(e)}"
+                        return observation
+                    break
+        
+        # 如果找不到对应的动作
+        if not act_found_flag:
             observation = ACION_NOT_FOUND_MESS
+            
         return observation
 
     def add_example(

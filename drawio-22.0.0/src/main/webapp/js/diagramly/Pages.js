@@ -1794,12 +1794,7 @@ EditorUi.prototype.createTabForPage = function(page, pageNumber)
 	return tab;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 EditorUi.prototype.addTabListeners = function(page, tab)
 {
 	mxEvent.disableContextMenu(tab);

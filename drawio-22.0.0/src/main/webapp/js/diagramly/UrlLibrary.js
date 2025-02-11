@@ -28,34 +28,19 @@ UrlLibrary = function(ui, data, title)
 //Extends mxEventSource
 mxUtils.extend(UrlLibrary, StorageFile);
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 UrlLibrary.prototype.getHash = function()
 {
 	return 'U' + encodeURIComponent(this.title);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 UrlLibrary.prototype.getTitle = function()
 {
 	return this.fname;
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 UrlLibrary.prototype.isAutosave = function()
 {
 	return false;

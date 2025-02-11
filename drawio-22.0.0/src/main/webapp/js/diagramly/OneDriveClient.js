@@ -766,12 +766,7 @@ OneDriveClient.prototype.getFile = function(id, success, error, denyConvert, asL
 	}), error);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.renameFile = function(file, filename, success, error)
 {
 	if (file != null && filename != null)
@@ -798,12 +793,7 @@ OneDriveClient.prototype.renameFile = function(file, filename, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.moveFile = function(id, folderId, success, error)
 {
 	//check that the source and destination are on the same drive
@@ -820,23 +810,13 @@ OneDriveClient.prototype.moveFile = function(id, folderId, success, error)
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.insertLibrary = function(filename, data, success, error, folderId)
 {
 	this.insertFile(filename, data, success, error, true, folderId);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.insertFile = function(filename, data, success, error, asLibrary, folderId)
 {
 	if (!this.isValidFilename(filename))
@@ -894,12 +874,7 @@ OneDriveClient.prototype.insertFile = function(filename, data, success, error, a
 	}))
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.checkExists = function(parentId, filename, askReplace, fn)
 {
 	var folder = '/me/drive/root';
@@ -945,12 +920,7 @@ OneDriveClient.prototype.checkExists = function(parentId, filename, askReplace, 
 	}, true);
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.saveFile = function(file, success, error, etag)
 {
 	try
@@ -1173,12 +1143,7 @@ OneDriveClient.prototype.writeLargeFile = function(url, data, success, error, et
 	}
 };
 
-/**
- * Translates this point by the given vector.
- * 
- * @param {number} dx X-coordinate of the translation.
- * @param {number} dy Y-coordinate of the translation.
- */
+
 OneDriveClient.prototype.writeFile = function(url, data, method, contentType, success, error, etag)
 {
 	try

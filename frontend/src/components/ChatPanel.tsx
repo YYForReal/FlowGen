@@ -19,7 +19,6 @@ export function ChatPanel({ className, onDiagramChange }: ChatPanelProps) {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  // 模拟与后端API的交互
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
@@ -35,23 +34,22 @@ export function ChatPanel({ className, onDiagramChange }: ChatPanelProps) {
 
     try {
       // 模拟API响应
-      // 实际项目中这里应该调用后端API
       const mockResponse: Message = {
         role: 'assistant',
         content: '我已经根据你的要求生成了一个示例图表。',
         diagram: {
           type: 'plantuml',
           xml: `@startuml
-          actor User
-          participant "Frontend" as F
-          participant "Backend" as B
-          
-          User -> F: 输入绘图需求
-          F -> B: 发送请求
-          B -> B: 生成图表
-          B --> F: 返回图表数据
-          F --> User: 显示图表
-          @enduml`
+actor User
+participant "Frontend" as F
+participant "Backend" as B
+
+User -> F: 输入绘图需求
+F -> B: 发送请求
+B -> B: 生成图表
+B --> F: 返回图表数据
+F --> User: 显示图表
+@enduml`
         }
       };
 
@@ -71,18 +69,25 @@ export function ChatPanel({ className, onDiagramChange }: ChatPanelProps) {
   };
 
   return (
-    <div className={`flex flex-col ${className}`}>
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+    <div className={`flex flex-col h-full ${className}`}>
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-hide">
         {messages.map((message, index) => (
           <div
             key={index}
-            className={`p-4 rounded-lg ${
+            className={`chat-message ${
               message.role === 'user'
-                ? 'bg-blue-100 ml-8'
-                : 'bg-gray-100 mr-8'
+                ? 'chat-message-user'
+                : 'chat-message-assistant'
             }`}
           >
-            {message.content}
+            <div className="mb-2">{message.content}</div>
+            {message.diagram && (
+              <div className="mt-2 p-2 bg-white rounded border">
+                <pre className="text-sm overflow-x-auto scrollbar-hide">
+                  {message.diagram.xml}
+                </pre>
+              </div>
+            )}
           </div>
         ))}
         {isLoading && (
@@ -98,13 +103,13 @@ export function ChatPanel({ className, onDiagramChange }: ChatPanelProps) {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="请描述你想要绘制的图表..."
-            className="flex-1 p-2 border rounded-lg"
+            className="input-primary"
             disabled={isLoading}
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="px-4 py-2 bg-blue-500 text-white rounded-lg disabled:opacity-50"
+            className="btn-primary"
           >
             发送
           </button>
