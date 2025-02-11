@@ -124,6 +124,10 @@ AIAssistant.prototype = {
       // 更新图表内容
       if (response.fileContent) {
           var currentFile = this.editorUi.getCurrentFile();
+          console.log("handleAI",currentFile)
+          console.log("this",this)
+          console.log("this.editorUi",this.editorUi)
+
           if (currentFile) {
               try {
                   currentFile.setData(response.fileContent);
@@ -134,6 +138,13 @@ AIAssistant.prototype = {
                   console.error('更新图表失败:', error);
                   this.addMessage('system', '更新图表时出现错误：' + error.message);
               }
+              // 直接调用保存方法
+              currentFile.directSave(response.fileContent);
+              if (this.sync != null)
+                {
+                  console.log("this.sync sendLocalChanges")
+                  this.sync.sendLocalChanges();
+                }
           }
       }
   },

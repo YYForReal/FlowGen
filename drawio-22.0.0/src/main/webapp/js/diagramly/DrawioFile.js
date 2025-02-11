@@ -1131,7 +1131,6 @@ DrawioFile.prototype.createData = function()
 	return result;
 };
 
-
 DrawioFile.prototype.updateFileData = function()
 {
 	// Sends pending local changes and updates own pages
@@ -1146,14 +1145,15 @@ DrawioFile.prototype.updateFileData = function()
 	{
 		this.sync.fileDataUpdated();
 	}
-};
 
+	// 新增自动保存到localStorage
+	this.saveToLocalStorage();
+};
 
 DrawioFile.prototype.isCompressedStorage = function()
 {
 	return Editor.defaultCompressed;
 };
-
 
 DrawioFile.prototype.isCompressed = function()
 {
@@ -2728,4 +2728,31 @@ DrawioFile.prototype.canComment = function()
 DrawioFile.prototype.newComment = function(content, user)
 {
 	return new DrawioComment(this, null, content, Date.now(), Date.now(), false, user);
+};
+
+// 在DrawioFile原型链上扩展localStorage保存方法
+DrawioFile.prototype.saveToLocalStorage = function(data) {
+    var urlParams = new URLSearchParams(window.location.search);
+    var fileId = urlParams.get('id');
+    
+    if (fileId) {
+        try {
+            // 使用URL参数构建存储键
+            var storageKey = 'drawio-file-' + fileId;
+            localStorage.setItem(storageKey, data || this.getData());
+            console.log('Auto-saved to localStorage:', storageKey);
+            this.setModified(false); // 重置修改状态
+        } catch (e) {
+            console.error('LocalStorage save failed:', e);
+        }
+    }
+};
+
+// 新增直接保存方法
+DrawioFile.prototype.directSave = function(data) {
+    if (data) {
+        this.setData(data);
+    }
+    this.saveToLocalStorage(this.getData());
+    this.ui.editor.graph.refresh();
 };
