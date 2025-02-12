@@ -38,7 +38,7 @@ class DeepseekLLM:
         """
         self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
         self.base_url = base_url or os.getenv("DEEPSEEK_API_BASE")
-        self.model_name = model_name # "deepseek-r1"
+        self.model_name = model_name # "deepseek-reasoner | deepseek-chat"
 
         self.client = OpenAI(
             api_key=self.api_key,
@@ -101,6 +101,8 @@ class DeepseekLLM:
         messages = [
             {"role": "user", "content": prompt}
         ]
+        print("prompt len",len(prompt))
+        print("model",self.model_name)
         response = self.client.chat.completions.create(
             model=self.model_name,
             messages=messages,

@@ -206,7 +206,7 @@ AIAssistant.prototype = {
       // 更新图表内容
       if (response.fileContent) {
           var currentFile = this.editorUi.getCurrentFile();
-          console.log("handleAI",currentFile)
+          console.log("handleAI currentFile",currentFile)
           console.log("this",this)
           console.log("this.editorUi",this.editorUi)
 
@@ -214,7 +214,9 @@ AIAssistant.prototype = {
               try {
                   currentFile.setData(response.fileContent);
                   this.editorUi.editor.graph.refresh();
-                  
+
+                  currentFile.open();
+
                   // 可选：添加成功提示
                   this.addMessage('system', '图表已更新');
               } catch (error) {

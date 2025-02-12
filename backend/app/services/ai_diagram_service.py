@@ -51,10 +51,15 @@ class AIDiagramService:
             )
             
             print("drawio_content:",drawio_content)
-            # 进一步过滤，如果开始出现```xml 结尾出现``` 则去掉
-            if drawio_content.startswith("```xml") and drawio_content.endswith("```"):
-                drawio_content = drawio_content.split("```xml")[1].split("```")[0].strip()
 
+            # 进一步过滤，如果开始出现```xml 结尾出现``` 则去掉
+            # if drawio_content.startswith("```xml"):
+            #     drawio_content = drawio_content.split("```xml")[1].split("```")[0].strip()
+
+            #  直接截取开头的<mxfile..., 结尾的</mxfile>
+            drawio_content = drawio_content.split("<mxfile")[1].split("</mxfile>")[0].strip()
+            # 补全<mxfile>...</mxfile>
+            drawio_content = "<mxfile" + drawio_content + "</mxfile>"
 
             # 存储生成的图表
             diagram = None
@@ -101,3 +106,73 @@ class AIDiagramService:
                 #     drawio_content = code_part.split("<mxfile>")[1].split("</mxfile>")[0].strip()
         
         return analysis, drawio_content 
+
+    async def stream_generate_diagram(
+        self,
+        diagram_type: str,
+        user_prompt: str,
+        current_drawio: Optional[str] = None
+    ):
+        """流式生成图表的核心逻辑"""
+        try:
+            # 构造提示词
+            prompt = self.prompt_template.format(
+                user_prompt=user_prompt,
+                current_drawio=current_drawio or "无"
+            )
+            
+            # 调用大模型流式生成
+            async for chunk in self.llm.stream_chat(prompt):
+                # 如果有思考过程，直接yield
+                if chunk.reasoning_content:
+                    yield self._format_sse({
+                        "reasoning_content": chunk.reasoning_content,
+                        "is_answering": False
+                    })
+                
+                # 如果有回答内容，需要解析处理
+                if chunk.answer_content:
+                    analysis, drawio_content = self._parse_response(
+                        chunk.answer_content,
+                        current_drawio
+                    )
+                    
+                    if drawio_content and drawio_content.startswith("<mxfile"):
+                        drawio_content = drawio_content.split("<mxfile")[1].split("</mxfile>")[0].strip()
+                        drawio_content = "<mxfile " + drawio_content + "</mxfile>"
+                        
+                        # 存储生成的图表
+                        diagram = await self.draw_service.create_diagram(
+                            diagram_type=diagram_type,
+                            content=drawio_content
+                        )
+                        
+                        yield self._format_sse({
+                            "analysis": analysis,
+                            "content": drawio_content,
+                            "diagram_info": diagram,
+                            "is_answering": True
+                        })
+                    else:
+                        yield self._format_sse({
+                            "analysis": analysis,
+                            "is_answering": True
+                        })
+                
+                # 如果有使用量信息，直接yield
+                if chunk.usage:
+                    yield self._format_sse({
+                        "usage": chunk.usage,
+                        "is_answering": False
+                    })
+                    
+        except Exception as e:
+            yield self._format_sse({
+                "error": str(e),
+                "is_answering": False
+            })
+
+    def _format_sse(self, data: dict) -> str:
+        """格式化Server-Sent Events (SSE)数据"""
+        import json
+        return f"data: {json.dumps(data)}\n\n" 

@@ -1832,9 +1832,10 @@ App.prototype.init = function()
 	var fileId = urlParams_id.get('id');
 
 	if (!fileId) {
+		console.log("urlParams",urlParams)
+		console.log("不存在fileId，生成ing")
 		// 生成8位随机ID（十六进制格式）
 		fileId = Math.random().toString(16).substr(2, 8);
-		console.log("urlParams",urlParams)
 		// 更新浏览器URL而不刷新页面
 		urlParams.id =  fileId;
 		// window.history.replaceState({}, '', '?' + urlParams.toString());
@@ -1858,6 +1859,7 @@ App.prototype.init = function()
 		// 从localStorage加载文件
 		var fileData = localStorage.getItem('drawio-file-' + fileId);
 		if (fileData) {
+			console.log("从localStorage加载文件 fileData",fileData)
 			var tempFile = new LocalFile(this, fileData, 'local-file.drawio', true);
 			this.loadFile("-1",null, tempFile);
 		} else {
