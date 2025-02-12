@@ -59,7 +59,7 @@ class AIDiagramService:
             #  直接截取开头的<mxfile..., 结尾的</mxfile>
             drawio_content = drawio_content.split("<mxfile")[1].split("</mxfile>")[0].strip()
             # 补全<mxfile>...</mxfile>
-            drawio_content = "<mxfile" + drawio_content + "</mxfile>"
+            drawio_content = "<mxfile " + drawio_content + "</mxfile>"
 
             # 存储生成的图表
             diagram = None
