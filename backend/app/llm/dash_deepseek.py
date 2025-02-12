@@ -6,12 +6,6 @@ from pydantic import BaseModel
 
 load_dotenv(find_dotenv())
 
-class GLMResponse(BaseModel):
-    """GLM响应模型"""
-    answer_content: str = ""
-    is_answering: bool = False
-    usage: Optional[Dict[str, Any]] = None
-
 class DeepseekResponse(BaseModel):
     """Deepseek响应模型"""
     reasoning_content: str = ""
@@ -36,9 +30,13 @@ class DeepseekLLM:
             base_url: API基础URL，默认从环境变量DASHSCOPE_API_BASE获取
             model_name: 模型名称，默认为deepseek-r1
         """
-        self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
-        self.base_url = base_url or os.getenv("DEEPSEEK_API_BASE")
+        self.api_key = api_key or os.getenv("DASHSCOPE_API_KEY")
+        self.base_url = base_url or os.getenv("DASHSCOPE_API_BASE")
         self.model_name = model_name # "deepseek-r1"
+
+        # self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
+        # self.base_url = base_url or os.getenv("DEEPSEEK_API_BASE")
+        # self.model_name = model_name # "deepseek-r1"
 
         self.client = OpenAI(
             api_key=self.api_key,
@@ -47,67 +45,78 @@ class DeepseekLLM:
     
     def stream_chat(
         self,
-        messages: list[dict[str, str]],
+        prompt: str,
         include_usage: bool = False
-    ) -> Generator[GLMResponse, None, None]:
+    ) -> Generator[DeepseekResponse, None, None]:
         """
         流式对话
         
         Args:
-            messages: 消息列表（需包含role和content）
+            prompt: 用户输入
             include_usage: 是否包含token使用情况
             
         Yields:
-            GLMResponse: 包含回答内容的响应对象
+            DeepseekResponse: 包含思考过程和回答内容的响应对象
         """
         completion = self.client.chat.completions.create(
             model=self.model_name,
-            messages=messages,
+            messages=[{"role": "user", "content": prompt}],
             stream=True,
             stream_options={"include_usage": include_usage} if include_usage else None
         )
 
-        response = GLMResponse()
+        response = DeepseekResponse()
         
         for chunk in completion:
+            # 处理token使用情况
             if chunk.choices == []:
                 if hasattr(chunk, 'usage'):
                     response.usage = chunk.usage.model_dump()
                 yield response
                 continue
                 
-            delta = chunk.choices[0].delta
-            if not delta.content:
+            # 处理思考过程和回答
+            if not hasattr(chunk.choices[0].delta, 'reasoning_content'):
+                continue
+                
+            if (chunk.choices[0].delta.reasoning_content == "" and 
+                chunk.choices[0].delta.content == ""):
                 continue
                 
             # 开始回答
-            if not response.is_answering:
+            if (chunk.choices[0].delta.reasoning_content == "" and 
+                not response.is_answering):
                 response.is_answering = True
                 
+            # 更新思考内容
+            if chunk.choices[0].delta.reasoning_content != "":
+                response.reasoning_content += chunk.choices[0].delta.reasoning_content
+                
             # 更新回答内容
-            response.answer_content += delta.content
+            elif chunk.choices[0].delta.content != "":
+                response.answer_content += chunk.choices[0].delta.content
+                
             yield response
 
-    def chat(self, prompt: str) -> GLMResponse:
+    def chat(self, prompt: str) -> DeepseekResponse:
         """
         单次对话
         
         Args:
-            messages: 消息列表（需包含role和content）
+            prompt: 用户输入
             
         Returns:
-            GLMResponse: 包含回答内容的响应对象
+            DeepseekResponse: 包含思考过程和回答内容的响应对象
         """
-        messages = [
-            {"role": "user", "content": prompt}
-        ]
         response = self.client.chat.completions.create(
             model=self.model_name,
-            messages=messages,
+            messages=[{"role": "user", "content": prompt}],
             timeout=300.0
         )
         
-        result = GLMResponse()
+        result = DeepseekResponse()
+        if hasattr(response.choices[0].message, 'reasoning_content'):
+            result.reasoning_content = response.choices[0].message.reasoning_content
         result.answer_content = response.choices[0].message.content
         result.is_answering = True
         

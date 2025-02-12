@@ -1,3 +1,4 @@
+# glm-zero-preview
 from typing import Generator, Optional, Dict, Any
 import os
 from openai import OpenAI
@@ -12,34 +13,27 @@ class GLMResponse(BaseModel):
     is_answering: bool = False
     usage: Optional[Dict[str, Any]] = None
 
-class DeepseekResponse(BaseModel):
-    """Deepseek响应模型"""
-    reasoning_content: str = ""
-    answer_content: str = ""
-    is_answering: bool = False
-    usage: Optional[Dict[str, Any]] = None
-
-class DeepseekLLM:
-    """Deepseek LLM工具类"""
+class GLMLLM:
+    """GLM大语言模型工具类"""
     
     def __init__(
         self,
         api_key: Optional[str] = None,
         base_url: Optional[str] = None,
-        model_name: str = "deepseek-reasoner"
+        model_name: str = "glm-4"
     ):
         """
-        初始化Deepseek LLM客户端
+        初始化GLM客户端
         
         Args:
-            api_key: API密钥，默认从环境变量DASHSCOPE_API_KEY获取
-            base_url: API基础URL，默认从环境变量DASHSCOPE_API_BASE获取
-            model_name: 模型名称，默认为deepseek-r1
+            api_key: API密钥，默认从环境变量ZHIPUAI_API_KEY获取
+            base_url: API基础URL，默认https://open.bigmodel.cn/api/paas/v4/
+            model_name: 模型名称，默认为glm-4
         """
-        self.api_key = api_key or os.getenv("DEEPSEEK_API_KEY")
-        self.base_url = base_url or os.getenv("DEEPSEEK_API_BASE")
-        self.model_name = model_name # "deepseek-r1"
-
+        self.api_key = api_key or os.getenv("ZHIPUAI_API_KEY")
+        self.base_url = base_url or "https://open.bigmodel.cn/api/paas/v4/"
+        self.model_name = model_name
+        
         self.client = OpenAI(
             api_key=self.api_key,
             base_url=self.base_url
@@ -115,3 +109,20 @@ class DeepseekLLM:
             result.usage = response.usage.model_dump()
             
         return result
+
+# client = OpenAI(
+#     api_key="your zhipuai api key",
+#     base_url="https://open.bigmodel.cn/api/paas/v4/"
+# ) 
+
+# completion = client.chat.completions.create(
+#     model="glm-4",  
+#     messages=[    
+#         {"role": "system", "content": "你是一个聪明且富有创造力的小说作家"},    
+#         {"role": "user", "content": "请你作为童话故事大王，写一篇短篇童话故事，故事的主题是要永远保持一颗善良的心，要能够激发儿童的学习兴趣和想象力，同时也能够帮助儿童更好地理解和接受故事中所蕴含的道理和价值观。"} 
+#     ],
+#     top_p=0.7,
+#     temperature=0.9
+#  ) 
+ 
+# print(completion.choices[0].message)

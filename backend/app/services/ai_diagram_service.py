@@ -43,13 +43,19 @@ class AIDiagramService:
             
             # 调用大模型生成
             response = self.llm.chat(prompt)
-            
+            print("response:",response)
             # 解析响应内容
             analysis, drawio_content = self._parse_response(
                 response.answer_content,
                 current_drawio
             )
             
+            print("drawio_content:",drawio_content)
+            # 进一步过滤，如果开始出现```xml 结尾出现``` 则去掉
+            if drawio_content.startswith("```xml") and drawio_content.endswith("```"):
+                drawio_content = drawio_content.split("```xml")[1].split("```")[0].strip()
+
+
             # 存储生成的图表
             diagram = None
             if drawio_content:
@@ -66,12 +72,13 @@ class AIDiagramService:
             }
             
         except Exception as e:
-            return {
-                "analysis": str(e),
-                "content": current_drawio or "",
-                "diagram_info": None,
-                "success": False
-            }
+            raise e
+            # return {
+            #     "analysis": str(e),
+            #     "content": current_drawio or "",
+            #     "diagram_info": None,
+            #     "success": False
+            # }
 
     def _parse_response(
         self,
@@ -81,7 +88,7 @@ class AIDiagramService:
         """解析大模型响应"""
         analysis = ""
         drawio_content = current_drawio or ""
-        
+        print("response:",response)
         if "【分析说明】" in response:
             parts = response.split("【drawio代码】")
             analysis_part = parts[0].replace("【分析说明】", "").strip()

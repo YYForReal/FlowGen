@@ -4,65 +4,78 @@ from app.models.chat import DiagramRequest, DiagramGenerationRequest, DiagramGen
 from app.llm.deepseek import DeepseekLLM
 from app.services.draw_service import DrawService
 from app.services.ai_diagram_service import AIDiagramService
+from fastapi.responses import StreamingResponse
+import json
+from app.llm.glm import GLMLLM
 
 router = APIRouter()
 deepseek_llm = DeepseekLLM()
 draw_service = DrawService()
 
-PROMPT_TEMPLATE = """
-你是一个专业的图表生成助手，请根据以下需求生成或修改drawio图表：
-
-用户需求：
-{user_prompt}
-
-当前图表内容（可选）：
-{current_drawio}
-
-请按以下格式响应：
-【分析说明】
-你的分析说明
-
-【drawio代码】
-<mxfile>
-生成的drawio代码
-</mxfile>
-"""
-
-def get_ai_diagram_service():
+def get_ai_diagram_service(model_name: str = "deepseek-r1"):
+    """根据模型名称返回对应的服务实例"""
+    llm = DeepseekLLM(model_name=model_name) if model_name.startswith("deepseek") else GLMLLM(model_name=model_name )
     return AIDiagramService(
         draw_service=DrawService(),
-        llm=DeepseekLLM()
+        llm=llm
     )
 
-@router.post("/diagrams")
-async def create_diagram(request: DiagramRequest) -> Dict[str, Any]:
-    """
-    创建图表
-    
-    Args:
-        request: 图表请求对象
-        
-    Returns:
-        Dict[str, Any]: 图表信息
-    """
-    try:
-        # TODO: 实现图表生成逻辑
-        return {
-            "id": "test-diagram-001",
-            "type": request.type,
-            "content": "图表内容",
-            "preview_url": "/diagrams/test-diagram-001.png"
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-@router.post("/generate-diagram", response_model=DiagramGenerationResponse)
+@router.post("/generate-diagram")
 async def generate_diagram(
     request: DiagramGenerationRequest,
-    service: AIDiagramService = Depends(get_ai_diagram_service)
 ):
-    return await service.generate_diagram(
-        diagram_type=request.type,
-        user_prompt=request.user_prompt,
-        current_drawio=request.current_drawio
-    ) 
+    service = get_ai_diagram_service(request.model_name)
+    if request.stream:
+        return StreamingResponse(
+            service.stream_generate_diagram(
+                diagram_type=request.type,
+                user_prompt=request.user_prompt,
+                current_drawio=request.current_drawio
+            ),
+            media_type="text/event-stream",
+            headers={
+                "X-Accel-Buffering": "no",  # 禁用Nginx缓冲
+                "Cache-Control": "no-cache"
+            }
+        )
+    else:
+        return await service.generate_diagram(
+            diagram_type=request.type,
+            user_prompt=request.user_prompt,
+            current_drawio=request.current_drawio
+        )
+
+async def stream_generate_diagram(self, diagram_type, user_prompt, current_drawio):
+    try:
+        full_prompt = self._build_prompt(diagram_type, user_prompt, current_drawio)
+        
+        async for chunk in self.llm.stream_chat(full_prompt):
+            # 先发送思考过程
+            if chunk.reasoning_content:
+                yield self._format_sse({
+                    "reasoning_content": chunk.reasoning_content,
+                    "is_answering": False
+                })
+            
+            # 发送正式回答
+            if chunk.answer_content:
+                yield self._format_sse({
+                    "answer_content": chunk.answer_content,
+                    "is_answering": chunk.is_answering
+                })
+            
+            # 最后发送使用量
+            if chunk.usage:
+                yield self._format_sse({
+                    "usage": chunk.usage,
+                    "is_answering": False
+                })
+                
+    except Exception as e:
+        yield self._format_sse({
+            "error": str(e),
+            "is_answering": False
+        })
+
+def _format_sse(self, data: dict) -> str:
+    return f"data: {json.dumps(data)}\n\n" 

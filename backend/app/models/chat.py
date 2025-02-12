@@ -28,11 +28,14 @@ class DiagramResponse(BaseModel):
     preview_url: Optional[str] = Field(default=None, description="预览图片URL")
     metadata: Optional[Dict[str, Any]] = Field(default=None, description="额外的元数据")
 
-class DiagramGenerationRequest(DiagramRequest):
+class DiagramGenerationRequest(BaseModel):
     """图表生成请求模型"""
-    user_prompt: str = Field(..., description="用户需求描述")
-    current_drawio: Optional[str] = Field(default=None, description="当前drawio文件内容")
-
+    type: str
+    user_prompt: str
+    current_drawio: Optional[str] = None
+    stream: bool = False
+    model_name: str = "deepseek-reasoner"
+    
 class DiagramGenerationResponse(BaseModel):
     """图表生成响应模型"""
     analysis: str = Field(..., description="生成过程分析说明")
