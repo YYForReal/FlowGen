@@ -91,55 +91,70 @@ AIAssistant.prototype = {
       
       // 修改为真实请求（带流式处理）
       if(streamOutput) {
-          this.handleStreamRequest(message, fileContent);
+          this.handleDiagramStreamRequest(message, fileContent);
       } else {
           this.handleNormalRequest(message, fileContent);
       }
   },
 
   handleStreamRequest: function(message, fileContent) {
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', 'http://localhost:8000/generate-diagram');
-      xhr.setRequestHeader('Content-Type', 'application/json');
-      
-      // 创建带加载状态的临时消息
-      var tempMsg = this.addMessage('assistant', '▌', true); // 初始光标提示
-      var buffer = '';
-      var lastUpdate = 0;
-      
-      xhr.onprogress = function() {
-          if (xhr.responseText) {
-              buffer += xhr.responseText;
-              // 节流更新（每100ms更新一次）
-              if (Date.now() - lastUpdate > 100) {
-                  tempMsg.innerHTML = this.parseResponse(buffer);
-                  this.messages.scrollTop = this.messages.scrollHeight;
-                  lastUpdate = Date.now();
-              }
-          }
-      }.bind(this);
-      
-      xhr.onload = function() {
-          // 最终更新确保显示完整内容
-          tempMsg.innerHTML = this.parseResponse(buffer);
-          this.messages.scrollTop = this.messages.scrollHeight;
-      }.bind(this);
-      
-      // 禁用发送按钮防止重复提交
-      this.sendBtn.disabled = true;
-      xhr.onloadend = function() {
-          this.sendBtn.disabled = false;
-      }.bind(this);
-      
-      xhr.send(JSON.stringify({
-          type: 'flowchart',
-          user_prompt: message,
-          current_drawio: fileContent,
-          stream: true,
-        //   model_name: "glm-zero-preview"
-        //   model_name: "deepseek-r1"
-          model_name: "deepseek-chat"
-      }));
+    // 创建带加载状态的临时消息
+    var tempMsg = this.addMessage('assistant', '▌', true);
+    var buffer = '';
+    
+    // 使用Fetch API替代XMLHttpRequest
+    fetch('http://localhost:8000/stream-chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            query: message,
+            current_drawio: fileContent,
+            // model_name: "deepseek-chat",
+            model_name: "glm-zero-preview"
+        })
+    }).then(response => {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        const processChunk = ({ done, value }) => {
+            if (done) {
+                tempMsg.innerHTML = this.parseResponse(buffer);
+                this.messages.scrollTop = this.messages.scrollHeight;
+                this.sendBtn.disabled = false;
+                return;
+            }
+            
+            const chunkData = decoder.decode(value);
+            chunkData.split('\n\n').forEach(event => {
+                if (event.startsWith('data: ')) {
+                    try {
+                        const jsonData = JSON.parse(event.replace('data: ', ''));
+                        if (jsonData.content) {
+                            buffer += jsonData.content;
+                            tempMsg.innerHTML = this.parseResponse(buffer) + '▌';
+                        }
+                        if (jsonData.error) {
+                            buffer += `[ERROR] ${jsonData.error}`;
+                        }
+                    } catch (e) {
+                        console.error('Parse error:', e);
+                    }
+                }
+            });
+            
+            reader.read().then(processChunk);
+        };
+        
+        reader.read().then(processChunk);
+    }).catch(error => {
+        this.addMessage('system', '请求失败: ' + error.message);
+        this.sendBtn.disabled = false;
+    });
+    
+    // 禁用发送按钮
+    this.sendBtn.disabled = true;
   },
 
   handleNormalRequest: function(message, fileContent) {
@@ -243,29 +258,111 @@ AIAssistant.prototype = {
       return msgDiv;
   },
 
-  parseResponse: function(responseText) {
-      try {
-          // 解析SSE格式数据
-          var events = responseText.split('\n\n');
-          var content = '';
-          
-          for (var event of events) {
-              var lines = event.split('\n');
-              for (var line of lines) {
-                  if (line.startsWith('data: ')) {
-                      var data = JSON.parse(line.substring(6));
-                      content += data.answer_content || '';
-                      // 添加打字机光标效果
-                      if (data.is_answering) {
-                          content += '▌';
-                      }
-                  }
-              }
-          }
-          return content.replace(/▌$/, ''); // 移除最后一个光标
-      } catch (e) {
-          console.error('解析响应失败:', e);
-          return '响应解析错误';
-      }
+  parseResponse: function(raw) {
+    // 过滤SSE格式错误信息
+    return raw.replace(/^data: \[ERROR\].*?\n\n/gm, '')
+             .replace(/(\n\n|\\n)/g, '\n')
+             .trim();
+  },
+
+  handleDiagramStreamRequest: function(message, fileContent) {
+    // 创建带加载状态的临时消息
+    var tempMsg = this.addMessage('assistant', '▌', true);
+    var analysisBuffer = '';
+    var diagramBuffer = '';
+    
+    fetch('http://localhost:8000/generate-diagram', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            type: "drawio",
+            user_prompt: message,
+            current_drawio: fileContent,
+            model_name: "glm-zero-preview",
+            stream: true
+        })
+    }).then(response => {
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        
+        const processChunk = ({ done, value }) => {
+            if (done) {
+                tempMsg.innerHTML = this.parseResponse(analysisBuffer);
+                this.messages.scrollTop = this.messages.scrollHeight;
+                this.sendBtn.disabled = false;
+                return;
+            }
+            
+            const chunkData = decoder.decode(value);
+            chunkData.split('\n\n').forEach(event => {
+                if (event.startsWith('data: ')) {
+                    try {
+                        const jsonData = JSON.parse(event.replace('data: ', ''));
+                        
+                        switch(jsonData.type) {
+                            case 'reasoning':
+                                // 显示思考过程
+                                tempMsg.innerHTML = this.parseResponse(jsonData.content + '▌');
+                                break;
+                                
+                            case 'analysis':
+                                // 更新分析说明
+                                analysisBuffer = jsonData.content;
+                                tempMsg.innerHTML = this.parseResponse(analysisBuffer + '▌');
+                                break;
+                                
+                            case 'diagram':
+                                // 更新图表内容
+                                if (jsonData.content && jsonData.diagram_info) {
+                                    diagramBuffer = jsonData.content;
+                                    // 更新编辑器内容
+                                    this.editor.setFileData(diagramBuffer);
+                                    // 如果有diagram_info，可以进行其他处理
+                                    console.log('Diagram info:', jsonData.diagram_info);
+                                }
+                                break;
+                                
+                            case 'error':
+                                // 显示错误信息
+                                tempMsg.innerHTML = this.parseResponse(`[ERROR] ${jsonData.content}`);
+                                break;
+                                
+                            case 'final':
+                                // 处理最终结果
+                                if (jsonData.response) {
+                                    const finalResponse = jsonData.response;
+                                    tempMsg.innerHTML = this.parseResponse(finalResponse.analysis);
+                                    if (finalResponse.content) {
+                                        this.editor.setFileData(finalResponse.content);
+                                    }
+                                }
+                                break;
+                                
+                            case 'usage':
+                                // 可以选择是否显示使用量信息
+                                console.log('Usage:', jsonData.content);
+                                break;
+                        }
+                        
+                    } catch (e) {
+                        console.error('Parse error:', e);
+                    }
+                }
+            });
+            
+            this.messages.scrollTop = this.messages.scrollHeight;
+            reader.read().then(processChunk);
+        };
+        
+        reader.read().then(processChunk);
+    }).catch(error => {
+        this.addMessage('system', '请求失败: ' + error.message);
+        this.sendBtn.disabled = false;
+    });
+    
+    // 禁用发送按钮
+    this.sendBtn.disabled = true;
   }
 };

@@ -35,7 +35,9 @@ async def generate_diagram(
             media_type="text/event-stream",
             headers={
                 "X-Accel-Buffering": "no",  # 禁用Nginx缓冲
-                "Cache-Control": "no-cache"
+                "Cache-Control": "no-cache",
+                "Connection": "keep-alive",
+                "Content-Type": "text/event-stream"
             }
         )
     else:

@@ -115,62 +115,110 @@ class AIDiagramService:
     ):
         """流式生成图表的核心逻辑"""
         try:
+            # 初始化状态对象
+            partial_response = {
+                "analysis": "",
+                "content": current_drawio or "",
+                "diagram_info": None,
+                "success": False,
+                "is_final": False
+            }
+            
             # 构造提示词
             prompt = self.prompt_template.format(
                 user_prompt=user_prompt,
                 current_drawio=current_drawio or "无"
             )
             
+            # 用于累积内容的缓冲区
+            analysis_buffer = ""
+            drawio_buffer = ""
+            is_in_analysis = False
+            is_in_drawio = False
+            
             # 调用大模型流式生成
             async for chunk in self.llm.stream_chat(prompt):
-                # 如果有思考过程，直接yield
+                # 处理思考过程
                 if chunk.reasoning_content:
                     yield self._format_sse({
-                        "reasoning_content": chunk.reasoning_content,
-                        "is_answering": False
+                        "type": "reasoning",
+                        "content": chunk.reasoning_content
                     })
+                    continue
                 
-                # 如果有回答内容，需要解析处理
                 if chunk.answer_content:
-                    analysis, drawio_content = self._parse_response(
-                        chunk.answer_content,
-                        current_drawio
-                    )
+                    content = chunk.answer_content
                     
-                    if drawio_content and drawio_content.startswith("<mxfile"):
-                        drawio_content = drawio_content.split("<mxfile")[1].split("</mxfile>")[0].strip()
-                        drawio_content = "<mxfile " + drawio_content + "</mxfile>"
-                        
-                        # 存储生成的图表
-                        diagram = await self.draw_service.create_diagram(
-                            diagram_type=diagram_type,
-                            content=drawio_content
-                        )
-                        
+                    # 检测分隔符
+                    if "【分析说明】" in content:
+                        is_in_analysis = True
+                        is_in_drawio = False
+                        content = content.split("【分析说明】")[1]
+                    elif "【drawio代码】" in content:
+                        is_in_analysis = False
+                        is_in_drawio = True
+                        content = content.split("【drawio代码】")[1]
+                    
+                    # 根据当前状态累积内容
+                    if is_in_analysis:
+                        analysis_buffer += content
+                        partial_response["analysis"] = analysis_buffer.strip()
                         yield self._format_sse({
-                            "analysis": analysis,
-                            "content": drawio_content,
-                            "diagram_info": diagram,
-                            "is_answering": True
+                            "type": "analysis",
+                            "content": partial_response["analysis"]
                         })
-                    else:
-                        yield self._format_sse({
-                            "analysis": analysis,
-                            "is_answering": True
-                        })
+                    
+                    if is_in_drawio:
+                        drawio_buffer += content
+                        if "<mxfile" in drawio_buffer and "</mxfile>" in drawio_buffer:
+                            # 提取完整的drawio内容
+                            drawio_content = drawio_buffer.split("<mxfile")[1].split("</mxfile>")[0].strip()
+                            drawio_content = "<mxfile " + drawio_content + "</mxfile>"
+                            
+                            if self._validate_drawio(drawio_content):
+                                partial_response["content"] = drawio_content
+                                # 创建图表
+                                diagram = await self.draw_service.create_diagram(
+                                    diagram_type=diagram_type,
+                                    content=drawio_content
+                                )
+                                partial_response["diagram_info"] = diagram
+                                partial_response["success"] = True
+                                
+                                yield self._format_sse({
+                                    "type": "diagram",
+                                    "content": partial_response["content"],
+                                    "diagram_info": diagram
+                                })
                 
-                # 如果有使用量信息，直接yield
+                # 处理使用量信息
                 if chunk.usage:
                     yield self._format_sse({
-                        "usage": chunk.usage,
-                        "is_answering": False
+                        "type": "usage",
+                        "content": chunk.usage
                     })
+            
+            # 标记最终结果
+            partial_response["is_final"] = True
+            yield self._format_sse({
+                "type": "final",
+                "response": partial_response
+            })
                     
         except Exception as e:
             yield self._format_sse({
-                "error": str(e),
-                "is_answering": False
+                "type": "error",
+                "content": str(e)
             })
+
+    def _validate_drawio(self, content: str) -> bool:
+        """验证drawio内容是否有效"""
+        return (
+            content 
+            and content.startswith("<mxfile") 
+            and content.endswith("</mxfile>")
+            and len(content) > 20  # 简单的长度检查
+        )
 
     def _format_sse(self, data: dict) -> str:
         """格式化Server-Sent Events (SSE)数据"""

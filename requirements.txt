@@ -12,3 +12,7 @@ faiss-cpu
 
 chromadb
 llama_index
+
+
+langchain
+langchain_community

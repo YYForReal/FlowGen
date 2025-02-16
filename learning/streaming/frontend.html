@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>流式对话演示</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #output {
+            border: 1px solid #ccc;
+            padding: 20px;
+            min-height: 200px;
+            margin: 20px 0;
+            white-space: pre-wrap;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>流式对话演示</h1>
+    <div id="output"></div>
+    <input type="text" id="input" placeholder="输入消息...">
+    <button onclick="sendMessage()">发送</button>
+
+    <script>
+        const output = document.getElementById('output')
+        const input = document.getElementById('input')
+
+        async function sendMessage() {
+            const message = input.value
+            input.value = ''
+            output.textContent += `\n用户：${message}\nAI：`
+
+            try {
+                const response = await fetch('http://localhost:8000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ text: message })
+                })
+
+                const reader = response.body.getReader()
+                const decoder = new TextDecoder()
+
+                while(true) {
+                    const { done, value } = await reader.read()
+                    if (done) break
+                    
+                    const chunk = decoder.decode(value)
+                    output.textContent += chunk
+                    // 自动滚动到底部
+                    output.scrollTop = output.scrollHeight
+                }
+            } catch (error) {
+                output.textContent += `\n错误：${error.message}`
+            }
+        }
+
+        // 回车发送
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage()
+        })
+    </script>
+</body>
+</html>

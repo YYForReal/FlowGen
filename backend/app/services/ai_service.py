@@ -20,6 +20,8 @@ import faiss
 import os
 from dotenv import load_dotenv
 from typing import AsyncGenerator
+from openai import AsyncOpenAI
+import json
 
 # 加载环境变量
 load_dotenv()
@@ -238,6 +240,11 @@ class AIService:
     """AI服务类，处理对话和工具调用"""
     
     def __init__(self):
+        # 使用AsyncOpenAI客户端
+        self.async_client = AsyncOpenAI(
+            api_key=os.getenv('ZHIPU_API_KEY'),
+            base_url=os.getenv('ZHIPU_BASE_URL')
+        )
         self.llm = OurLLM()
         # 初始化RAG服务，指定知识库文件
         self.rag_service = RAGService(
@@ -307,4 +314,24 @@ class AIService:
                 "status": "error",
                 "message": str(e),
                 "type": "error"
-            } 
+            }
+
+    async def stream_generate(self, query: str) -> AsyncGenerator[str, None]:
+        """修复后的异步流式生成方法"""
+        try:
+            # 使用异步create方法
+            response = await self.async_client.chat.completions.create(
+                model=os.getenv('ZHIPU_CHAT_MODEL'),
+                messages=[{"role": "user", "content": query}],
+                stream=True
+            )
+            
+            # 使用异步迭代器
+            async for chunk in response:
+                content = chunk.choices[0].delta.content
+                if content:
+                    yield f"data: {json.dumps({'content': content})}\n\n"
+                    
+        except Exception as e:
+            error_msg = f"data: {json.dumps({'error': str(e)})}\n\n"
+            yield error_msg

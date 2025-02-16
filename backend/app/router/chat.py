@@ -1,4 +1,5 @@
-from fastapi import APIRouter, WebSocket, HTTPException
+from fastapi import APIRouter, WebSocket, HTTPException, Body
+from fastapi.responses import StreamingResponse
 from typing import Dict, Any
 from app.services.ai_service import AIService
 from app.models.chat import ChatMessage
@@ -38,4 +39,12 @@ async def chat(message: ChatMessage) -> Dict[str, Any]:
     Returns:
         Dict[str, Any]: 响应结果
     """
-    return await ai_service.process_message(message.content) 
+    return await ai_service.process_message(message.content)
+
+@router.post("/stream-chat")
+async def stream_chat(query: str = Body(..., embed=True)):
+    """优化后的流式聊天接口"""
+    return StreamingResponse(
+        ai_service.stream_generate(query),
+        media_type="text/event-stream"
+    ) 

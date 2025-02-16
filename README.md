@@ -1,5 +1,7 @@
 # 科研绘图助手 FlowGen
 
+
+
 > 目标：本项目将实现一个自动帮助科研er绘图的agent，通过对话的形式生成各类实验数据的绘图文件，可编辑的流程图。
 
 > 顺便存储基于Datawhale的课程wow agent所作的笔记。
@@ -8,6 +10,12 @@
 
 > 始于 2025-01-13
 
+
+## 效果
+
+![image](./assets/before_1.png)
+
+![image](./assets/after_1.png)
 
 
 ## 目录
