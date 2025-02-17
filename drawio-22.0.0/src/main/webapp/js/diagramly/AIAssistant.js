@@ -271,10 +271,13 @@ AIAssistant.prototype = {
     var analysisBuffer = '';
     var diagramBuffer = '';
     
+    console.log('Starting stream request...');
+    
     fetch('http://localhost:8000/generate-diagram', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Accept': 'text/event-stream'
         },
         body: JSON.stringify({
             type: "drawio",
@@ -284,11 +287,20 @@ AIAssistant.prototype = {
             stream: true
         })
     }).then(response => {
+        console.log('Stream response received:', response);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        if (!response.body) {
+            throw new Error('ReadableStream not yet supported in this browser.');
+        }
+        
         const reader = response.body.getReader();
         const decoder = new TextDecoder();
         
         const processChunk = ({ done, value }) => {
             if (done) {
+                console.log('Stream complete');
                 tempMsg.innerHTML = this.parseResponse(analysisBuffer);
                 this.messages.scrollTop = this.messages.scrollHeight;
                 this.sendBtn.disabled = false;
@@ -296,10 +308,13 @@ AIAssistant.prototype = {
             }
             
             const chunkData = decoder.decode(value);
+            console.log('Received chunk:', chunkData);
+            
             chunkData.split('\n\n').forEach(event => {
                 if (event.startsWith('data: ')) {
                     try {
                         const jsonData = JSON.parse(event.replace('data: ', ''));
+                        console.log('Parsed JSON data:', jsonData);
                         
                         switch(jsonData.type) {
                             case 'reasoning':
@@ -317,15 +332,26 @@ AIAssistant.prototype = {
                                 // 更新图表内容
                                 if (jsonData.content && jsonData.diagram_info) {
                                     diagramBuffer = jsonData.content;
-                                    // 更新编辑器内容
-                                    this.editor.setFileData(diagramBuffer);
-                                    // 如果有diagram_info，可以进行其他处理
-                                    console.log('Diagram info:', jsonData.diagram_info);
+                                    // 使用正确的方法更新图表
+                                    var currentFile = this.editorUi.getCurrentFile();
+                                    if (currentFile) {
+                                        try {
+                                            currentFile.setData(diagramBuffer);
+                                            this.editorUi.editor.graph.refresh();
+                                            currentFile.open();
+                                            // 直接保存更改
+                                            currentFile.directSave(diagramBuffer);
+                                            console.log('Diagram updated successfully');
+                                        } catch (error) {
+                                            console.error('Failed to update diagram:', error);
+                                        }
+                                    }
                                 }
                                 break;
                                 
                             case 'error':
                                 // 显示错误信息
+                                console.error('Stream error:', jsonData.content);
                                 tempMsg.innerHTML = this.parseResponse(`[ERROR] ${jsonData.content}`);
                                 break;
                                 
@@ -335,14 +361,25 @@ AIAssistant.prototype = {
                                     const finalResponse = jsonData.response;
                                     tempMsg.innerHTML = this.parseResponse(finalResponse.analysis);
                                     if (finalResponse.content) {
-                                        this.editor.setFileData(finalResponse.content);
+                                        var currentFile = this.editorUi.getCurrentFile();
+                                        if (currentFile) {
+                                            try {
+                                                currentFile.setData(finalResponse.content);
+                                                this.editorUi.editor.graph.refresh();
+                                                currentFile.open();
+                                                currentFile.directSave(finalResponse.content);
+                                                console.log('Final diagram update successful');
+                                            } catch (error) {
+                                                console.error('Failed to update final diagram:', error);
+                                            }
+                                        }
                                     }
                                 }
                                 break;
                                 
                             case 'usage':
                                 // 可以选择是否显示使用量信息
-                                console.log('Usage:', jsonData.content);
+                                console.log('Usage info:', jsonData.content);
                                 break;
                         }
                         
@@ -358,6 +395,7 @@ AIAssistant.prototype = {
         
         reader.read().then(processChunk);
     }).catch(error => {
+        console.error('Stream request failed:', error);
         this.addMessage('system', '请求失败: ' + error.message);
         this.sendBtn.disabled = false;
     });

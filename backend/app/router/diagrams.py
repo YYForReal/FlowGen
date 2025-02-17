@@ -37,7 +37,11 @@ async def generate_diagram(
                 "X-Accel-Buffering": "no",  # 禁用Nginx缓冲
                 "Cache-Control": "no-cache",
                 "Connection": "keep-alive",
-                "Content-Type": "text/event-stream"
+                "Content-Type": "text/event-stream",
+                "Access-Control-Allow-Origin": "*",
+                "Access-Control-Allow-Methods": "POST, OPTIONS",
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Max-Age": "86400"
             }
         )
     else:
