@@ -1,0 +1,13 @@
+<mxfile>
+  <diagram>
+    <mxGraphModel>
+      <root>
+        <mxCell id="0"/> <!-- 根节点 -->
+        <mxCell id="1" parent="0"/> <!-- 图形元素 -->
+        <mxCell id="2" value="节点文本" style="形状样式" parent="1" vertex="1">
+          <mxGeometry x="100" y="200" width="120" height="60"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
