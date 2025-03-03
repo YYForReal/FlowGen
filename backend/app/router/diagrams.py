@@ -48,7 +48,8 @@ async def generate_diagram(
         return await service.generate_diagram(
             diagram_type=request.type,
             user_prompt=request.user_prompt,
-            current_drawio=request.current_drawio
+            current_drawio=request.current_drawio,
+            output_strategy=request.output_strategy
         )
 
 async def stream_generate_diagram(self, diagram_type, user_prompt, current_drawio):
@@ -84,4 +85,4 @@ async def stream_generate_diagram(self, diagram_type, user_prompt, current_drawi
         })
 
 def _format_sse(self, data: dict) -> str:
-    return f"data: {json.dumps(data)}\n\n" 
+    return f"data: {json.dumps(data)}\n\n"

@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile>
+  <diagram name="高级RAG流程图" id="advanced-rag-flow">
+    <mxGraphModel dx="1422" dy="762" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <!-- 标题 -->
+        <mxCell id="title" value="高级检索增强生成 (RAG) 系统架构" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#0066CC;" vertex="1" parent="1">
+          <mxGeometry x="250" y="30" width="600" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 用户 -->
+        <mxCell id="user" value="用户" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="100" y="300" width="50" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- 查询处理区域 -->
+        <mxCell id="query_processing_group" value="查询处理" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="200" y="200" width="200" height="280" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="query_input" value="查询输入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="query_processing_group">
+          <mxGeometry x="30" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="query_analysis" value="查询分析" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="query_processing_group">
+          <mxGeometry x="30" y="120" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="query_expansion" value="查询扩展" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=12;" vertex="1" parent="query_processing_group">
+          <mxGeometry x="30" y="190" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 知识库区域 -->
+        <mxCell id="knowledge_base_group" value="知识库管理" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="40" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="document_store" value="文档存储" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="knowledge_base_group">
+          <mxGeometry x="30" y="50" width="60" height="80" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="vector_store" value="向量存储" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="knowledge_base_group">
+          <mxGeometry x="110" y="50" width="60" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- 检索区域 -->
+        <mxCell id="retrieval_group" value="检索引擎" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="220" width="200" height="240" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="chunking" value="文档分块" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="retrieval_group">
+          <mxGeometry x="30" y="40" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="embedding" value="向量嵌入" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="retrieval_group">
+          <mxGeometry x="30" y="100" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="vector_search" value="向量检索" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=12;" vertex="1" parent="retrieval_group">
+          <mxGeometry x="30" y="160" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 增强区域 -->
+        <mxCell id="augmentation_group" value="上下文增强" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="220" width="200" height="240" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="reranking" value="结果重排序" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="augmentation_group">
+          <mxGeometry x="30" y="40" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="filtering" value="相关性过滤" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="augmentation_group">
+          <mxGeometry x="30" y="100" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="context_fusion" value="上下文融合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=12;" vertex="1" parent="augmentation_group">
+          <mxGeometry x="30" y="160" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 生成区域 -->
+        <mxCell id="generation_group" value="回答生成" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="700" y="480" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="llm_generation" value="大语言模型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="generation_group">
+          <mxGeometry x="30" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="answer_formatting" value="回答格式化" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=12;" vertex="1" parent="generation_group">
+          <mxGeometry x="30" y="110" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 评估区域 -->
+        <mxCell id="evaluation_group" value="质量评估" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;startSize=30;rounded=1;arcSize=10;" vertex="1" parent="1">
+          <mxGeometry x="450" y="480" width="200" height="160" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="factuality_check" value="事实性检查" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="evaluation_group">
+          <mxGeometry x="30" y="50" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="relevance_check" value="相关性评估" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=12;" vertex="1" parent="evaluation_group">
+          <mxGeometry x="30" y="110" width="140" height="40" as="geometry" />
+        </mxCell>
+        
+        <!-- 结果 -->
+        <mxCell id="result" value="回答结果" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#f5f5f5;strokeColor=#666666;fontColor=#333333;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="250" y="520" width="120" height="80" as="geometry" />
+        </mxCell>
+        
+        <!-- 连接线 -->
+        <!-- 用户到查询 -->
+        <mxCell id="user_to_query" value="提问" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;" edge="1" parent="1" source="user" target="query_input">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- 查询处理内部连接 -->
+        <mxCell id="query_flow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;" edge="1" parent="1" source="query_input" target="query_analysis">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <mxCell id="query_flow2" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;" edge="1" parent="1" source="query_analysis" target="query_expansion">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- 查询到检索 -->
+        <mxCell id="query_to_retrieval" value="查询向量" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="query_expansion" target="vector_search">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="420" y="410" />
+              <mxPoint x="420" y="400" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        
+        <!-- 知识库到检索 -->
+        <mxCell id="kb_to_chunking" value="文档" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="document_store" target="chunking">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        
+        <!-- 检索内部连接 -->
+        <mxCell id="retrieval_flow1" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#6c8ebf;fontSize=12;" edge="1" parent="1" source="chunking" target="embedding">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

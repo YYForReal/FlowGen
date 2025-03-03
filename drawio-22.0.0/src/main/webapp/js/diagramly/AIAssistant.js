@@ -1,12 +1,15 @@
 var AIAssistant = function(editorUi) {
+  console.log("AIAssistant: 初始化AI助手组件");
   this.editorUi = editorUi;
   this.init();
 };
 
 AIAssistant.prototype = {
   init: function() {
+      console.log("AIAssistant: 开始初始化过程");
       this.createPanel();
       this.bindEvents();
+      console.log("AIAssistant: 初始化完成");
   },
 
   createPanel: function() {
@@ -76,6 +79,7 @@ AIAssistant.prototype = {
       var message = mxUtils.trim(this.input.value);
       if (!message) return;
 
+      console.log("AIAssistant: 发送用户消息 - ", message);
       this.addMessage('user', message);
       this.input.value = '';
 
@@ -174,9 +178,9 @@ AIAssistant.prototype = {
           type: 'flowchart',  // 可以根据实际图表类型动态设置
           user_prompt: payload.message,
           current_drawio: payload.fileContent,
-          model_name: "deepseek-chat"
+        //   model_name: "deepseek-chat"
         //   model_name: "deepseek-r1"
-        // model_name: "glm-zero-preview"
+        model_name: "glm-4-plus"
       };
 
       // 发送请求到后端
@@ -213,8 +217,10 @@ AIAssistant.prototype = {
   },
 
   handleAIResponse: function(response) {
+      console.log("AIAssistant: 收到AI响应", response);
       // 显示AI的分析回复
       if (response.analysis) {
+          console.log("AIAssistant: 显示分析结果");
           this.addMessage('assistant', response.analysis);
       }
       
@@ -250,6 +256,7 @@ AIAssistant.prototype = {
   },
 
   addMessage: function(role, content, isTemp) {
+      console.log("AIAssistant: 添加消息 - 角色:", role, isTemp ? "(临时消息)" : "");
       var msgDiv = document.createElement('div');
       msgDiv.className = 'geAIMessage ' + role;
       msgDiv.textContent = content;

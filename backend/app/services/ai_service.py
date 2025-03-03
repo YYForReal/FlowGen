@@ -239,22 +239,24 @@ class RAGService:
 class AIService:
     """AI服务类，处理对话和工具调用"""
     
-    def __init__(self):
+    def __init__(self,using_rag = False):
         # 使用AsyncOpenAI客户端
         self.async_client = AsyncOpenAI(
             api_key=os.getenv('ZHIPU_API_KEY'),
             base_url=os.getenv('ZHIPU_BASE_URL')
         )
         self.llm = OurLLM()
-        # 初始化RAG服务，指定知识库文件
-        self.rag_service = RAGService(
-            markdown_files=[
-                "docs/knowledge_base/plantuml.md",
-                "docs/knowledge_base/drawio.md",
-                # 添加更多知识库文件
-            ],
-            llm=self.llm
-        )
+        if using_rag:
+            print("Using RAG Service...")
+            # 初始化RAG服务，指定知识库文件
+            self.rag_service = RAGService(
+                markdown_files=[
+                    "docs/knowledge_base/plantuml.md",
+                    "docs/knowledge_base/drawio.md",
+                    # 添加更多知识库文件
+                ],
+                llm=self.llm
+            )
         self.agent = self._create_agent()
 
     def _create_agent(self) -> ReActAgent:

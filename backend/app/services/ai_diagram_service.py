@@ -1,6 +1,9 @@
 from typing import Optional, Dict, Any
 from app.llm.deepseek import DeepseekLLM
 from app.services.draw_service import DrawService
+from app.utils.drawio_xml_processor import DrawIOXMLProcessor
+import tempfile
+import os
 
 class AIDiagramService:
     """AI图表生成服务"""
@@ -8,6 +11,7 @@ class AIDiagramService:
     def __init__(self, draw_service: DrawService, llm: DeepseekLLM):
         self.draw_service = draw_service
         self.llm = llm
+        self.xml_processor = DrawIOXMLProcessor(llm_service=llm)
         self.prompt_template = """
 你是一个专业的图表生成助手，请根据以下需求生成或修改drawio图表：
 
@@ -31,11 +35,53 @@ class AIDiagramService:
         self,
         diagram_type: str,
         user_prompt: str,
-        current_drawio: Optional[str] = None
+        current_drawio: Optional[str] = None,
+        output_strategy: str = "v2"
     ) -> Dict[str, Any]:
         """生成图表核心逻辑"""
         try:
-            # 构造提示词
+            if output_strategy == "v2" and current_drawio:
+                # 使用drawio_xml_processor进行增量处理
+                # 创建临时文件用于处理
+                with tempfile.NamedTemporaryFile(suffix='.drawio', delete=False) as temp_input:
+                    temp_input.write(current_drawio.encode('utf-8'))
+                    temp_input_path = temp_input.name
+                
+                with tempfile.NamedTemporaryFile(suffix='.drawio', delete=False) as temp_output:
+                    temp_output_path = temp_output.name
+
+                try:
+                    # 提取XML元素
+                    xml_content = self.xml_processor.extract_xml_by_level(temp_input_path)
+                    # 生成优化后的XML
+                    optimized_xml = self.xml_processor.generate_optimized_xml(xml_content, user_prompt)
+                    # 替换元素
+                    result = self.xml_processor.replace_elements_by_id(temp_input_path, optimized_xml, temp_output_path)
+
+                    if result["success"]:
+                        with open(temp_output_path, 'r', encoding='utf-8') as f:
+                            drawio_content = f.read()
+                        
+                        # 存储生成的图表
+                        diagram = await self.draw_service.create_diagram(
+                            diagram_type=diagram_type,
+                            content=drawio_content
+                        )
+                        
+                        return {
+                            "analysis": result["message"],
+                            "content": drawio_content,
+                            "diagram_info": diagram,
+                            "success": True
+                        }
+                finally:
+                    # 清理临时文件
+                    if os.path.exists(temp_input_path):
+                        os.unlink(temp_input_path)
+                    if os.path.exists(temp_output_path):
+                        os.unlink(temp_output_path)
+            
+            # 使用原始全量输出模式
             prompt = self.prompt_template.format(
                 user_prompt=user_prompt,
                 current_drawio=current_drawio or "无"
@@ -43,19 +89,12 @@ class AIDiagramService:
             
             # 调用大模型生成
             response = self.llm.chat(prompt)
-            print("response:",response)
             # 解析响应内容
             analysis, drawio_content = self._parse_response(
                 response.answer_content,
                 current_drawio
             )
             
-            print("drawio_content:",drawio_content)
-
-            # 进一步过滤，如果开始出现```xml 结尾出现``` 则去掉
-            # if drawio_content.startswith("```xml"):
-            #     drawio_content = drawio_content.split("```xml")[1].split("```")[0].strip()
-
             #  直接截取开头的<mxfile..., 结尾的</mxfile>
             drawio_content = drawio_content.split("<mxfile")[1].split("</mxfile>")[0].strip()
             # 补全<mxfile>...</mxfile>
@@ -223,4 +262,4 @@ class AIDiagramService:
     def _format_sse(self, data: dict) -> str:
         """格式化Server-Sent Events (SSE)数据"""
         import json
-        return f"data: {json.dumps(data)}\n\n" 
+        return f"data: {json.dumps(data)}\n\n"

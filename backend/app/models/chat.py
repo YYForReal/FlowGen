@@ -35,10 +35,11 @@ class DiagramGenerationRequest(BaseModel):
     current_drawio: Optional[str] = None
     stream: bool = False
     model_name: str = "deepseek-reasoner"
+    output_strategy: str = Field(default="v2", description="输出策略，v1为全量输出，v2为增量输出")
     
 class DiagramGenerationResponse(BaseModel):
     """图表生成响应模型"""
     analysis: str = Field(..., description="生成过程分析说明")
     content: str = Field(..., description="生成的drawio文件内容")
     diagram_info: Optional[Dict[str, Any]] = Field(default=None, description="存储的图表元数据")
-    success: bool = Field(..., description="是否生成成功") 
+    success: bool = Field(..., description="是否生成成功")

@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile>
+  <diagram>
+    <mxGraphModel>
+      <root>
+        <mxCell id="0" />
+<mxCell id="1" parent="0" />
+<mxCell id="3" value="开始" style="start;rounded=1;whiteSpace=wrap" parent="0" vertex="1">
+  <mxGeometry x="50" y="150" width="80" height="40" as="geometry" />
+</mxCell>
+<mxCell id="4" value="结束" style="end;rounded=1;whiteSpace=wrap" parent="0" vertex="1">
+  <mxGeometry x="250" y="150" width="80" height="40" as="geometry" />
+</mxCell>
+<mxCell id="5" value="是否满足条件？" style="shape=ellipse;whiteSpace=wrap;rounded=1" parent="0" vertex="1">
+  <mxGeometry x="150" y="100" width="100" height="60" as="geometry" />
+</mxCell>
+<mxCell id="6" value="是" style="shape=rectangle;whiteSpace=wrap;rounded=1" parent="5" vertex="1">
+  <mxGeometry x="120" y="160" width="40" height="40" as="geometry" />
+</mxCell>
+<mxCell id="7" value="否" style="shape=rectangle;whiteSpace=wrap;rounded=1" parent="5" vertex="1">
+  <mxGeometry x="180" y="160" width="40" height="40" as="geometry" />
+</mxCell>
+<mxCell id="8" value="执行操作" style="shape=rectangle;whiteSpace=wrap;rounded=1" parent="0" vertex="1">
+  <mxGeometry x="150" y="200" width="100" height="60" as="geometry" />
+</mxCell>
+<mxCell id="10" edge="1" parent="3" source="3" target="5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+<mxCell id="11" edge="1" parent="5" source="6" target="8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+<mxCell id="12" edge="1" parent="5" source="7" target="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+<mxCell id="13" edge="1" parent="8" source="8" target="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+<mxCell id="14" value="更新状态" style="shape=rectangle;whiteSpace=wrap;rounded=1" parent="0" vertex="1">
+  <mxGeometry x="150" y="270" width="100" height="60" as="geometry" />
+</mxCell>
+<mxCell id="15" edge="1" parent="8" source="8" target="14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell>
+<mxCell id="16" edge="1" parent="14" source="14" target="4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;exitX=0.5;exitY=1;exitDx=0;exitDy=0;">
+  <mxGeometry relative="1" as="geometry" />
+</mxCell></root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
