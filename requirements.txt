@@ -16,3 +16,6 @@ llama_index
 
 langchain
 langchain_community
+
+nbformat
+nbclient
